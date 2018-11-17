@@ -24,56 +24,55 @@ import retrofit2.Response;
 
 public class ReviewsActivity extends AppCompatActivity implements Callback<Reviews> {
 
-    private Movie movie;
-    private ImageView ivPoster;
-    private ProgressBar progressBar;
-    private RecyclerView recyclerView;
+  private Movie movie;
+  private ImageView ivPoster;
+  private ProgressBar progressBar;
+  private RecyclerView recyclerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reviews);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_reviews);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
-        ivPoster = (ImageView) findViewById(R.id.backdrop);
-        progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_reviews);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
+    ivPoster = (ImageView) findViewById(R.id.backdrop);
+    progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+    recyclerView = (RecyclerView) findViewById(R.id.recyclerview_reviews);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    recyclerView.setItemAnimator(new DefaultItemAnimator());
+    recyclerView.setHasFixedSize(true);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
-            movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
-            Picasso.get()
-                    .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
-                    .into(ivPoster);
-            fetchReviews(MovieClient.create().reviews(movie.id()));
-        }
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
+      movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
+      Picasso.get()
+          .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
+          .into(ivPoster);
+      fetchReviews(MovieClient.create().reviews(movie.id()));
     }
+  }
 
-    private void fetchReviews(Call<Reviews> call) {
-        Snackbar.make(recyclerView, getString(R.string.loading_reviews_msg), Snackbar.LENGTH_SHORT)
-                .show();
-        progressBar.setVisibility(View.VISIBLE);
-        call.enqueue(this);
-    }
+  private void fetchReviews(Call<Reviews> call) {
+    Snackbar.make(recyclerView, getString(R.string.loading_reviews_msg), Snackbar.LENGTH_SHORT)
+        .show();
+    progressBar.setVisibility(View.VISIBLE);
+    call.enqueue(this);
+  }
 
-    @Override
-    public void onResponse(Call<Reviews> call, Response<Reviews> response) {
-        progressBar.setVisibility(View.INVISIBLE);
-        Reviews reviews = response.body();
-        ReviewAdapter reviewAdapter =
-                new ReviewAdapter(reviews.reviews());
-        recyclerView.setAdapter(reviewAdapter);
-        recyclerView.setVisibility(View.VISIBLE);
-    }
+  @Override
+  public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+    progressBar.setVisibility(View.INVISIBLE);
+    Reviews reviews = response.body();
+    ReviewAdapter reviewAdapter = new ReviewAdapter(reviews.reviews());
+    recyclerView.setAdapter(reviewAdapter);
+    recyclerView.setVisibility(View.VISIBLE);
+  }
 
-    @Override
-    public void onFailure(Call<Reviews> call, Throwable t) {
-        recyclerView.setVisibility(View.INVISIBLE);
-        Snackbar.make(recyclerView, getString(R.string.loading_reviews_error_msg),
-                Snackbar.LENGTH_LONG).show();
-    }
+  @Override
+  public void onFailure(Call<Reviews> call, Throwable t) {
+    recyclerView.setVisibility(View.INVISIBLE);
+    Snackbar.make(recyclerView, getString(R.string.loading_reviews_error_msg), Snackbar.LENGTH_LONG)
+        .show();
+  }
 }

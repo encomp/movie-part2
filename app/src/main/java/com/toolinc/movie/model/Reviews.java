@@ -18,61 +18,54 @@ import java.util.List;
 @AutoValue
 public abstract class Reviews implements Serializable {
 
-    public abstract int id();
+  @NonNull
+  public static final Builder builder() {
+    return new Builder();
+  }
 
-    public abstract int page();
+  public abstract int id();
 
-    public abstract int totalPages();
+  public abstract int page();
 
-    public abstract int totalResults();
+  public abstract int totalPages();
 
-    public abstract ImmutableList<Review> reviews();
+  public abstract int totalResults();
 
-    @NonNull
-    public static final Builder builder() {
-        return new Builder();
+  public abstract ImmutableList<Review> reviews();
+
+  public static final class Builder extends TypeAdapter<Reviews> {
+    private static final Gson GSON =
+        new GsonBuilder().registerTypeAdapter(Review.class, Review.builder()).create();
+
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("page")
+    private int page;
+
+    @SerializedName("results")
+    private List<Review> reviews;
+
+    @SerializedName("total_pages")
+    private int totalPages;
+
+    @SerializedName("total_results")
+    private int totalResults;
+
+    private Builder() {}
+
+    public Reviews build() {
+      return new AutoValue_Reviews(
+          id, page, totalPages, totalResults, ImmutableList.copyOf(reviews));
     }
 
-    public static final class Builder extends TypeAdapter<Reviews> {
-        private static final Gson GSON = new GsonBuilder()
-                .registerTypeAdapter(Review.class, Review.builder())
-                .create();
+    @Override
+    public void write(JsonWriter out, Reviews value) throws IOException {}
 
-        @SerializedName("id")
-        private int id;
-
-        @SerializedName("page")
-        private int page;
-
-        @SerializedName("results")
-        private List<Review> reviews;
-
-        @SerializedName("total_pages")
-        private int totalPages;
-
-        @SerializedName("total_results")
-        private int totalResults;
-
-        private Builder() {
-        }
-
-        public Reviews build() {
-            return new AutoValue_Reviews(id,
-                    page,
-                    totalPages,
-                    totalResults,
-                    ImmutableList.copyOf(reviews));
-        }
-
-        @Override
-        public void write(JsonWriter out, Reviews value) throws IOException {
-        }
-
-        @Override
-        public Reviews read(JsonReader in) throws IOException {
-            Builder builder = GSON.fromJson(in, Builder.class);
-            return builder.build();
-        }
+    @Override
+    public Reviews read(JsonReader in) throws IOException {
+      Builder builder = GSON.fromJson(in, Builder.class);
+      return builder.build();
     }
-
+  }
 }

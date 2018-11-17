@@ -16,46 +16,44 @@ import com.toolinc.movie.model.Review;
  */
 public final class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
 
-    private final ImmutableList<Review> reviews;
+  private final ImmutableList<Review> reviews;
 
-    public ReviewAdapter(ImmutableList<Review> reviews) {
-        this.reviews = Preconditions.checkNotNull(reviews, "Reviews are missing.");
+  public ReviewAdapter(ImmutableList<Review> reviews) {
+    this.reviews = Preconditions.checkNotNull(reviews, "Reviews are missing.");
+  }
+
+  @NonNull
+  @Override
+  public ReviewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+    ReviewsListItemReviewBinding reviewBinding =
+        ReviewsListItemReviewBinding.inflate(layoutInflater, viewGroup, false);
+    return new ReviewHolder(reviewBinding);
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull ReviewHolder reviewHolder, int i) {
+    reviewHolder.bind(reviews.get(i));
+  }
+
+  @Override
+  public int getItemCount() {
+    return reviews.size();
+  }
+
+  /** Describes a review item about its place within the RecyclerView. */
+  public final class ReviewHolder extends RecyclerView.ViewHolder {
+
+    private final ReviewsListItemReviewBinding reviewBinding;
+
+    public ReviewHolder(ReviewsListItemReviewBinding reviewBinding) {
+      super(reviewBinding.getRoot());
+      this.reviewBinding =
+          Preconditions.checkNotNull(reviewBinding, "ReviewsListItemReviewBinding is missing.");
     }
 
-    @NonNull
-    @Override
-    public ReviewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-        ReviewsListItemReviewBinding reviewBinding =
-                ReviewsListItemReviewBinding.inflate(layoutInflater, viewGroup, false);
-        return new ReviewHolder(reviewBinding);
+    void bind(Review review) {
+      reviewBinding.setReview(review);
     }
-
-    @Override
-    public void onBindViewHolder(@NonNull ReviewHolder reviewHolder, int i) {
-        reviewHolder.bind(reviews.get(i));
-    }
-
-    @Override
-    public int getItemCount() {
-        return reviews.size();
-    }
-
-    /**
-     * Describes a review item about its place within the RecyclerView.
-     */
-    public final class ReviewHolder extends RecyclerView.ViewHolder {
-
-        private final ReviewsListItemReviewBinding reviewBinding;
-
-        public ReviewHolder(ReviewsListItemReviewBinding reviewBinding) {
-            super(reviewBinding.getRoot());
-            this.reviewBinding = Preconditions.checkNotNull(reviewBinding,
-                    "ReviewsListItemReviewBinding is missing.");
-        }
-
-        void bind(Review review) {
-            reviewBinding.setReview(review);
-        }
-    }
+  }
 }

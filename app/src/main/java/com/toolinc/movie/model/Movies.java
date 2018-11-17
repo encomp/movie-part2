@@ -18,41 +18,38 @@ import java.util.List;
 @AutoValue
 public abstract class Movies implements Serializable {
 
-    public abstract int page();
+  @NonNull
+  public static final Builder builder() {
+    return new Builder();
+  }
 
-    public abstract ImmutableList<Movie> movies();
+  public abstract int page();
 
-    @NonNull
-    public static final Builder builder() {
-        return new Builder();
+  public abstract ImmutableList<Movie> movies();
+
+  public static final class Builder extends TypeAdapter<Movies> {
+    private static final Gson GSON =
+        new GsonBuilder().registerTypeAdapter(Movie.class, Movie.builder()).create();
+
+    @SerializedName("page")
+    private int page;
+
+    @SerializedName("results")
+    private List<Movie> movies;
+
+    private Builder() {}
+
+    public Movies build() {
+      return new AutoValue_Movies(page, ImmutableList.copyOf(movies));
     }
 
-    public static final class Builder extends TypeAdapter<Movies> {
-        private static final Gson GSON = new GsonBuilder()
-                .registerTypeAdapter(Movie.class, Movie.builder())
-                .create();
+    @Override
+    public void write(JsonWriter out, Movies value) throws IOException {}
 
-        @SerializedName("page")
-        private int page;
-
-        @SerializedName("results")
-        private List<Movie> movies;
-
-        private Builder() {
-        }
-
-        public Movies build() {
-            return new AutoValue_Movies(page, ImmutableList.copyOf(movies));
-        }
-
-        @Override
-        public void write(JsonWriter out, Movies value) throws IOException {
-        }
-
-        @Override
-        public Movies read(JsonReader in) throws IOException {
-            Builder builder = GSON.fromJson(in, Builder.class);
-            return builder.build();
-        }
+    @Override
+    public Movies read(JsonReader in) throws IOException {
+      Builder builder = GSON.fromJson(in, Builder.class);
+      return builder.build();
     }
+  }
 }

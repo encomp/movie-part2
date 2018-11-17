@@ -15,60 +15,57 @@ import java.io.Serializable;
 @AutoValue
 public abstract class Movie implements Serializable {
 
-    public abstract String id();
+  @NonNull
+  public static final Builder builder() {
+    return new Builder();
+  }
 
-    public abstract String originalTitle();
+  public abstract String id();
 
-    public abstract String posterPath();
+  public abstract String originalTitle();
 
-    public abstract String overview();
+  public abstract String posterPath();
 
-    public abstract String voteAverage();
+  public abstract String overview();
 
-    public abstract String releaseDate();
+  public abstract String voteAverage();
 
-    @NonNull
-    public static final Builder builder() {
-        return new Builder();
+  public abstract String releaseDate();
+
+  public static final class Builder extends TypeAdapter<Movie> {
+    private static final Gson GSON = new Gson();
+
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("original_title")
+    private String originalTitle;
+
+    @SerializedName("poster_path")
+    private String posterPath;
+
+    @SerializedName("overview")
+    private String overview;
+
+    @SerializedName("vote_average")
+    private String voteAverage;
+
+    @SerializedName("release_date")
+    private String releaseDate;
+
+    private Builder() {}
+
+    public Movie build() {
+      return new AutoValue_Movie(id, originalTitle, posterPath, overview, voteAverage, releaseDate);
     }
 
-    public static final class Builder extends TypeAdapter<Movie> {
-        private static final Gson GSON = new Gson();
+    @Override
+    public void write(JsonWriter out, Movie movie) throws IOException {}
 
-        @SerializedName("id")
-        private String id;
-
-        @SerializedName("original_title")
-        private String originalTitle;
-
-        @SerializedName("poster_path")
-        private String posterPath;
-
-        @SerializedName("overview")
-        private String overview;
-
-        @SerializedName("vote_average")
-        private String voteAverage;
-
-        @SerializedName("release_date")
-        private String releaseDate;
-
-        private Builder() {
-        }
-
-        public Movie build() {
-            return new AutoValue_Movie(id, originalTitle, posterPath, overview, voteAverage,
-                    releaseDate);
-        }
-
-        @Override
-        public void write(JsonWriter out, Movie movie) throws IOException {
-        }
-
-        @Override
-        public Movie read(JsonReader in) throws IOException {
-            Builder builder = GSON.fromJson(in, Builder.class);
-            return builder.build();
-        }
+    @Override
+    public Movie read(JsonReader in) throws IOException {
+      Builder builder = GSON.fromJson(in, Builder.class);
+      return builder.build();
     }
+  }
 }

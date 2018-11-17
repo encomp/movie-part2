@@ -15,55 +15,53 @@ import java.io.Serializable;
 @AutoValue
 public abstract class Video implements Serializable {
 
-    public abstract String id();
+  @NonNull
+  public static final Builder builder() {
+    return new Builder();
+  }
 
-    public abstract String key();
+  public abstract String id();
 
-    public abstract String name();
+  public abstract String key();
 
-    public abstract String site();
+  public abstract String name();
 
-    public abstract String type();
+  public abstract String site();
 
-    @NonNull
-    public static final Builder builder() {
-        return new Builder();
+  public abstract String type();
+
+  public static final class Builder extends TypeAdapter<Video> {
+
+    private static final Gson GSON = new Gson();
+
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("key")
+    private String key;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("site")
+    private String site;
+
+    @SerializedName("type")
+    private String type;
+
+    private Builder() {}
+
+    public Video build() {
+      return new AutoValue_Video(id, key, name, site, type);
     }
 
-    public static final class Builder extends TypeAdapter<Video> {
+    @Override
+    public void write(JsonWriter out, Video value) throws IOException {}
 
-        private static final Gson GSON = new Gson();
-
-        @SerializedName("id")
-        private String id;
-
-        @SerializedName("key")
-        private String key;
-
-        @SerializedName("name")
-        private String name;
-
-        @SerializedName("site")
-        private String site;
-
-        @SerializedName("type")
-        private String type;
-
-        private Builder() {
-        }
-
-        public Video build() {
-            return new AutoValue_Video(id, key, name, site, type);
-        }
-
-        @Override
-        public void write(JsonWriter out, Video value) throws IOException {
-        }
-
-        @Override
-        public Video read(JsonReader in) throws IOException {
-            Builder builder = GSON.fromJson(in, Builder.class);
-            return builder.build();
-        }
+    @Override
+    public Video read(JsonReader in) throws IOException {
+      Builder builder = GSON.fromJson(in, Builder.class);
+      return builder.build();
     }
+  }
 }

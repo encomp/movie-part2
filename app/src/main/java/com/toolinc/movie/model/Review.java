@@ -15,50 +15,48 @@ import java.io.Serializable;
 @AutoValue
 public abstract class Review implements Serializable {
 
-    public abstract String id();
+  @NonNull
+  public static final Builder builder() {
+    return new Builder();
+  }
 
-    public abstract String author();
+  public abstract String id();
 
-    public abstract String content();
+  public abstract String author();
 
-    public abstract String url();
+  public abstract String content();
 
-    @NonNull
-    public static final Builder builder() {
-        return new Builder();
+  public abstract String url();
+
+  public static final class Builder extends TypeAdapter<Review> {
+
+    private static final Gson GSON = new Gson();
+
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("author")
+    private String author;
+
+    @SerializedName("content")
+    private String content;
+
+    @SerializedName("url")
+    private String url;
+
+    private Builder() {}
+
+    public Review build() {
+      return new AutoValue_Review(id, author, content, url);
     }
 
-    public static final class Builder extends TypeAdapter<Review> {
+    @Override
+    public void write(JsonWriter out, Review value) throws IOException {}
 
-        private static final Gson GSON = new Gson();
-
-        @SerializedName("id")
-        private String id;
-
-        @SerializedName("author")
-        private String author;
-
-        @SerializedName("content")
-        private String content;
-
-        @SerializedName("url")
-        private String url;
-
-        private Builder() {
-        }
-
-        public Review build() {
-            return new AutoValue_Review(id, author, content, url);
-        }
-
-        @Override
-        public void write(JsonWriter out, Review value) throws IOException {
-        }
-
-        @Override
-        public Review read(JsonReader in) throws IOException {
-            Builder builder = GSON.fromJson(in, Builder.class);
-            return builder.build();
-        }
+    @Override
+    public Review read(JsonReader in) throws IOException {
+      Builder builder = GSON.fromJson(in, Builder.class);
+      return builder.build();
     }
+  }
 }

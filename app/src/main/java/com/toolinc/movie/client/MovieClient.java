@@ -16,43 +16,49 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-/**
- * Specifies the contract of the information that will be retrieve from the themoviedb api
- */
+/** Specifies the contract of the information that will be retrieve from the themoviedb api */
 public interface MovieClient {
-    static final String API_KEY = "api_key";
-    static final GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeAdapter(Movies.class, Movies.builder())
-            .registerTypeAdapter(Reviews.class, Reviews.builder())
-            .registerTypeAdapter(Videos.class, Videos.builder());
-    static final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-            .addInterceptor(chain -> {
+  static final String API_KEY = "api_key";
+  static final GsonBuilder gsonBuilder =
+      new GsonBuilder()
+          .registerTypeAdapter(Movies.class, Movies.builder())
+          .registerTypeAdapter(Reviews.class, Reviews.builder())
+          .registerTypeAdapter(Videos.class, Videos.builder());
+  static final OkHttpClient.Builder okHttpClientBuilder =
+      new OkHttpClient.Builder()
+          .addInterceptor(
+              chain -> {
                 Request request = chain.request();
-                HttpUrl url = request.url().newBuilder()
-                        .addQueryParameter(API_KEY, BuildConfig.API_KEY).build();
+                HttpUrl url =
+                    request
+                        .url()
+                        .newBuilder()
+                        .addQueryParameter(API_KEY, BuildConfig.API_KEY)
+                        .build();
                 request = request.newBuilder().url(url).get().build();
                 Response response = chain.proceed(request);
                 return response;
-            });
-    static final Retrofit retrofitClient = new Retrofit.Builder()
-            .baseUrl(BuildConfig.END_POINT)
-            .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
-            .client(okHttpClientBuilder.build())
-            .build();
+              });
+  static final Retrofit retrofitClient =
+      new Retrofit.Builder()
+          .baseUrl(BuildConfig.END_POINT)
+          .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
+          .client(okHttpClientBuilder.build())
+          .build();
 
-    @GET("movie/top_rated")
-    Call<Movies> topRated();
+  static MovieClient create() {
+    return retrofitClient.create(MovieClient.class);
+  }
 
-    @GET("movie/popular")
-    Call<Movies> popular();
+  @GET("movie/top_rated")
+  Call<Movies> topRated();
 
-    @GET("movie/{movie_id}/reviews")
-    Call<Reviews> reviews(@Path("movie_id") String movieId);
+  @GET("movie/popular")
+  Call<Movies> popular();
 
-    @GET("movie/{movie_id}/videos")
-    Call<Videos> videos(@Path("movie_id") String movieId);
+  @GET("movie/{movie_id}/reviews")
+  Call<Reviews> reviews(@Path("movie_id") String movieId);
 
-    static MovieClient create() {
-        return retrofitClient.create(MovieClient.class);
-    }
+  @GET("movie/{movie_id}/videos")
+  Call<Videos> videos(@Path("movie_id") String movieId);
 }

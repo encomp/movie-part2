@@ -18,41 +18,38 @@ import java.util.List;
 @AutoValue
 public abstract class Videos implements Serializable {
 
-    public abstract int id();
+  @NonNull
+  public static final Builder builder() {
+    return new Builder();
+  }
 
-    public abstract ImmutableList<Video> videos();
+  public abstract int id();
 
-    @NonNull
-    public static final Builder builder() {
-        return new Builder();
+  public abstract ImmutableList<Video> videos();
+
+  public static final class Builder extends TypeAdapter<Videos> {
+    private static final Gson GSON =
+        new GsonBuilder().registerTypeAdapter(Video.class, Video.builder()).create();
+
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("results")
+    private List<Video> videos;
+
+    private Builder() {}
+
+    public Videos build() {
+      return new AutoValue_Videos(id, ImmutableList.copyOf(videos));
     }
 
-    public static final class Builder extends TypeAdapter<Videos> {
-        private static final Gson GSON = new GsonBuilder()
-                .registerTypeAdapter(Video.class, Video.builder())
-                .create();
+    @Override
+    public void write(JsonWriter out, Videos value) throws IOException {}
 
-        @SerializedName("id")
-        private int id;
-
-        @SerializedName("results")
-        private List<Video> videos;
-
-        private Builder() {
-        }
-
-        public Videos build() {
-            return new AutoValue_Videos(id, ImmutableList.copyOf(videos));
-        }
-
-        @Override
-        public void write(JsonWriter out, Videos value) throws IOException {
-        }
-
-        @Override
-        public Videos read(JsonReader in) throws IOException {
-            Builder builder = GSON.fromJson(in, Builder.class);
-            return builder.build();
-        }
+    @Override
+    public Videos read(JsonReader in) throws IOException {
+      Builder builder = GSON.fromJson(in, Builder.class);
+      return builder.build();
     }
+  }
 }
