@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.model.Movie;
 import com.toolinc.movie.model.Reviews;
+import com.toolinc.movie.model.Videos;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +51,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
       movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
       displayMovieDetailInfo(movie);
       fetchReviews(MovieClient.create().reviews(movie.id()));
+      fetchTrailers(MovieClient.create().videos(movie.id()));
     }
     initListeners();
   }
@@ -62,6 +64,15 @@ public final class MovieDetailActivity extends AppCompatActivity {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
                 .show();
+          }
+        });
+    fabTrailer.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Intent intent = new Intent(MovieDetailActivity.this, TrailersActivity.class);
+            intent.putExtra(Intent.EXTRA_KEY_EVENT, movie);
+            startActivity(intent);
           }
         });
     fabReview.setOnClickListener(
@@ -103,6 +114,31 @@ public final class MovieDetailActivity extends AppCompatActivity {
             fabReview.hide();
             Snackbar.make(
                     fabReview, getString(R.string.loading_reviews_error_msg), Snackbar.LENGTH_SHORT)
+                .show();
+          }
+        });
+  }
+
+  private void fetchTrailers(Call<Videos> call) {
+    call.enqueue(
+        new Callback<Videos>() {
+
+          @Override
+          public void onResponse(Call<Videos> call, Response<Videos> response) {
+            if (response.body().videos().size() > 0) {
+              fabTrailer.show();
+            } else {
+              fabTrailer.hide();
+            }
+          }
+
+          @Override
+          public void onFailure(Call<Videos> call, Throwable t) {
+            fabTrailer.hide();
+            Snackbar.make(
+                    fabTrailer,
+                    getString(R.string.loading_trailers_error_msg),
+                    Snackbar.LENGTH_SHORT)
                 .show();
           }
         });

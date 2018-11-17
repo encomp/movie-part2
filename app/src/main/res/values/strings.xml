@@ -52,4 +52,10 @@
     </string>
     <!-- Trailers Activity -->
     <string name="title_activity_trailer">Trailers</string>
+    <string name="loading_trailers_msg" translatable="false">
+        Loading the trailers for this movie.
+    </string>
+    <string name="loading_trailers_error_msg" translatable="false">
+        Unable to retrieve the trailers for this movie ...
+    </string>
 </resources>
