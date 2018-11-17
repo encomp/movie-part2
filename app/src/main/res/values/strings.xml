@@ -50,4 +50,6 @@
         " but I'm still glad we have this one.\r\n\r\n_Final rating:★★★ - I liked it. Would "
         "personally recommend you give it a go._"
     </string>
+    <!-- Trailers Activity -->
+    <string name="title_activity_trailer">Trailers</string>
 </resources>

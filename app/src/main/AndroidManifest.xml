@@ -17,6 +17,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,6 +34,14 @@
             android:label="@string/title_activity_review"
             android:parentActivityName=".MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.toolinc.movie.MovieDetailActivity" />
+        </activity>
+        <activity
+            android:name=".TrailersActivity"
+            android:label="@string/title_activity_trailer"
+            android:parentActivityName=".MovieDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.toolinc.movie.MovieDetailActivity" />
