@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Movies 2</string>
+    <!-- Movies Menu Labels -->
+    <string name="action_gallery" translatable="false">Movies</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="action_favorites" translatable="false">My Movies</string>
+    <string name="top_movies" translatable="false">Top Movies</string>
+    <string name="popular_movies" translatable="false">Popular Movies</string>
+    <!-- Navigation -->
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Movies</string>
+    <string name="nav_header_subtitle" translatable="false">edgar.martinez.rico@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="title_activity_movie" translatable="false">Movies</string>
+    <!-- Movie Detail Activity -->
+    <string name="loading_movies_msg" translatable="false">Loading the selected movies.</string>
+    <string name="loading_movies_error_msg" translatable="false">
+        Unable to load the movies...
+    </string>
+    <string name="title_activity_movie_detail" translatable="false">Movie Details</string>
+    <string name="synopsis_label" translatable="false">Synopsis:</string>
+    <string name="rated_label" translatable="false">Rated:</string>
+    <string name="release_date_label" translatable="false">Release Date:</string>
+    <string name="loading_msg" translatable="false">Loading the selected movies.</string>
+    <string name="trailer_label" translatable="false">Trailer</string>
+    <string name="review_label" translatable="false">Review</string>
+    <string name="cd_poster_movie">Movie poster</string>
+    <!-- Review Activity -->
+    <string name="loading_reviews_msg" translatable="false">
+        Loading the reviews for this movie.
+    </string>
+    <string name="loading_reviews_error_msg" translatable="false">
+        Unable to retrieve the reviews for this movie ...
+    </string>
+    <string name="title_activity_review" translatable="false">Reviews</string>
+    <string name="author_label" translatable="false">Author:</string>
+    <string name="sample_author" translatable="false">Gimly</string>
+    <string name="sample_comment" translatable="false">
+        "I honestly don't know what everyone's talking about, _Venom_ is **fine**! I mean... "
+        "It's not great. There were a few moments I found myself thinking \"This bit's pretty bad,"
+        "why did they do this?\" and a lot of moments I found myself thinking \"This bit's pretty "
+        "good, but they still probably should have just made a **real** "
+        "_Venom_ movie with Marvel.\r\n\r\nBut it's fine. The absolute best parts are the "
+        "interactions taking place within Venom himself (between Brock and the Symbiote) and the "
+        "movie would have been a lot worse if Tom Hardy wasn't capable of pulling that off. Look, "
+        "a _Venom_ movie probably should have been rated R, and it probably should have taken more "
+        "notes from current superhero movies than superhero movies from fifteen years ago, but I "
+        "still had a good time with _Venom_, maybe it's not the best possible version of the story,"
+        " but I'm still glad we have this one.\r\n\r\n_Final rating:★★★ - I liked it. Would "
+        "personally recommend you give it a go._"
+    </string>
+</resources>
