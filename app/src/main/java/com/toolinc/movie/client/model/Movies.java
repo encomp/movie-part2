@@ -10,6 +10,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.toolinc.movie.model.MovieModel;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,7 +26,7 @@ public abstract class Movies implements Serializable {
 
   public abstract int page();
 
-  public abstract ImmutableList<Movie> movies();
+  public abstract ImmutableList<MovieModel> movies();
 
   public static final class Builder extends TypeAdapter<Movies> {
     private static final Gson GSON =

@@ -2,8 +2,8 @@ package com.toolinc.movie.persistence;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.os.AsyncTask;
 
+import com.toolinc.movie.executor.AppExecutors;
 import com.toolinc.movie.persistence.dao.MovieDao;
 import com.toolinc.movie.persistence.model.MovieEntity;
 
@@ -11,35 +11,29 @@ import java.util.List;
 
 public final class MovieRepository {
 
-  private MovieDao movieDao;
-  private LiveData<List<MovieEntity>> allMovies;
+  private final MovieDao movieDao;
 
   MovieRepository(Application application) {
-    MovieRoomDatabase db = MovieRoomDatabase.getDatabase(application);
-    movieDao = db.movieDao();
-    allMovies = movieDao.getAllWords();
+    movieDao = MovieRoomDatabase.getDatabase(application).movieDao();
   }
 
-  LiveData<List<MovieEntity>> getAllWords() {
-    return allMovies;
+  LiveData<List<MovieEntity>> getAllMovies() {
+    return movieDao.getAll();
   }
 
-  public void insert(MovieEntity word) {
-    new insertAsyncTask(movieDao).execute(word);
+  public LiveData<MovieEntity> findById(String id) {
+    return movieDao.findById(id);
   }
 
-  private static class insertAsyncTask extends AsyncTask<MovieEntity, Void, Void> {
+  public void insert(MovieEntity movieEntity) {
+    AppExecutors.getInstance().diskIO().execute(() -> movieDao.insert(movieEntity));
+  }
 
-    private MovieDao asyncMovieDao;
+  public void delete(MovieEntity movieEntity) {
+    AppExecutors.getInstance().diskIO().execute(() -> movieDao.delete(movieEntity));
+  }
 
-    insertAsyncTask(MovieDao dao) {
-      asyncMovieDao = dao;
-    }
-
-    @Override
-    protected Void doInBackground(final MovieEntity... params) {
-      asyncMovieDao.insert(params[0]);
-      return null;
-    }
+  public static MovieRepository create(Application application) {
+    return new MovieRepository(application);
   }
 }

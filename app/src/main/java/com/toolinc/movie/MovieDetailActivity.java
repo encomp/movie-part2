@@ -1,7 +1,9 @@
 package com.toolinc.movie;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,10 @@ import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.client.model.Reviews;
 import com.toolinc.movie.client.model.Videos;
+import com.toolinc.movie.persistence.MovieRepository;
+import com.toolinc.movie.persistence.model.MovieEntity;
+
+import java.util.Optional;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +33,8 @@ import retrofit2.Response;
 public final class MovieDetailActivity extends AppCompatActivity {
 
   private Movie movie;
-  private FloatingActionButton fabFavorites;
+  private FloatingActionButton fabAdd;
+  private FloatingActionButton fabRemove;
   private FloatingActionButton fabReview;
   private FloatingActionButton fabTrailer;
   private ImageView ivPoster;
@@ -35,13 +42,15 @@ public final class MovieDetailActivity extends AppCompatActivity {
   private TextView tvMovieOverview;
   private RatingBar tvVoteAverage;
   private TextView tvReleaseDate;
+  private MovieRepository movieRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_movie_detail);
 
-    fabFavorites = (FloatingActionButton) findViewById(R.id.fab);
+    fabAdd = (FloatingActionButton) findViewById(R.id.fab_add);
+    fabRemove = (FloatingActionButton) findViewById(R.id.fab_remove);
     fabReview = ((FloatingActionButton) findViewById(R.id.fab_review));
     fabTrailer = ((FloatingActionButton) findViewById(R.id.fab_trailer));
     ivPoster = (ImageView) findViewById(R.id.iv_movie_poster);
@@ -49,24 +58,53 @@ public final class MovieDetailActivity extends AppCompatActivity {
     tvMovieOverview = (TextView) findViewById(R.id.tv_movie_overview);
     tvVoteAverage = (RatingBar) findViewById(R.id.tv_vote_average);
     tvReleaseDate = (TextView) findViewById(R.id.tv_release_date);
+    movieRepository = MovieRepository.create(getApplication());
 
     if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
       movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
       displayMovieDetailInfo(movie);
       fetchReviews(MovieClient.create().reviews(movie.id()));
       fetchTrailers(MovieClient.create().videos(movie.id()));
+      movieRepository
+          .findById(movie.id())
+          .observe(
+              this,
+              new Observer<MovieEntity>() {
+                @Override
+                public void onChanged(@Nullable MovieEntity movieEntity) {
+                  Optional<MovieEntity> optionalMovie = Optional.ofNullable(movieEntity);
+                  if (optionalMovie.isPresent()) {
+                    fabAdd.hide();
+                    fabRemove.show();
+                  } else {
+                    fabAdd.show();
+                    fabRemove.hide();
+                  }
+                }
+              });
     }
     initListeners();
   }
 
   private void initListeners() {
-    fabFavorites.setOnClickListener(
+    fabAdd.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show();
+            String msg = String.format("Saving the movie [%s]", movie.toString());
+            Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+            movieRepository.insert(new MovieEntity(movie));
+            MovieDetailActivity.this.finish();
+          }
+        });
+    fabRemove.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            String msg = String.format("Saving the movie [%s]", movie.toString());
+            Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+            movieRepository.delete(new MovieEntity(movie));
+            MovieDetailActivity.this.finish();
           }
         });
     fabTrailer.setOnClickListener(

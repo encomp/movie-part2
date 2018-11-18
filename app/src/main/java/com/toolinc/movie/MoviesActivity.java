@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.common.collect.ImmutableList;
 import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.client.model.Movies;
 import com.toolinc.movie.model.MovieModel;
@@ -135,8 +134,7 @@ public final class MoviesActivity extends AppCompatActivity
   public void onResponse(Call<Movies> call, Response<Movies> response) {
     progressBar.setVisibility(View.INVISIBLE);
     Movies movies = response.body();
-    MovieAdapter moviesAdapter =
-        new MovieAdapter(ImmutableList.copyOf(movies.movies()), MoviesActivity.this);
+    MovieAdapter moviesAdapter = new MovieAdapter(movies.movies(), MoviesActivity.this);
     recyclerView.setAdapter(moviesAdapter);
     recyclerView.setVisibility(View.VISIBLE);
   }

@@ -2,9 +2,11 @@ package com.toolinc.movie.persistence.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.model.MovieModel;
 
 @Entity(tableName = "movieTable")
@@ -44,6 +46,17 @@ public class MovieEntity implements MovieModel {
     this.releaseDate = releaseDate;
   }
 
+  @Ignore
+  public MovieEntity(Movie movie) {
+    this(
+        movie.id(),
+        movie.originalTitle(),
+        movie.posterPath(),
+        movie.overview(),
+        movie.voteAverage(),
+        movie.releaseDate());
+  }
+
   @Override
   public String id() {
     return id;
@@ -73,5 +86,4 @@ public class MovieEntity implements MovieModel {
   public String releaseDate() {
     return null;
   }
-
 }

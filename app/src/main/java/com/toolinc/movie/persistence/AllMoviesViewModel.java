@@ -8,23 +8,24 @@ import com.toolinc.movie.persistence.model.MovieEntity;
 
 import java.util.List;
 
-public class MovieViewModel extends AndroidViewModel {
+public class AllMoviesViewModel extends AndroidViewModel {
 
-  private MovieRepository movieRepository;
+  private final MovieRepository movieRepository;
 
-  private LiveData<List<MovieEntity>> allMovies;
-
-  public MovieViewModel(Application application) {
+  public AllMoviesViewModel(Application application) {
     super(application);
     movieRepository = new MovieRepository(application);
-    allMovies = movieRepository.getAllWords();
   }
 
-  LiveData<List<MovieEntity>> getAllWords() {
-    return allMovies;
+  public LiveData<List<MovieEntity>> getAllMovies() {
+    return movieRepository.getAllMovies();
   }
 
   public void insert(MovieEntity word) {
     movieRepository.insert(word);
+  }
+
+  public void delete(MovieEntity word) {
+    movieRepository.delete(word);
   }
 }
