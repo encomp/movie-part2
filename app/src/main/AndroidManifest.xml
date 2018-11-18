@@ -39,12 +39,21 @@
                 android:value="com.toolinc.movie.MovieDetailActivity" />
         </activity>
         <activity
-            android:name=".VideoActivity"
-            android:label="@string/title_activity_video"
-            android:parentActivityName=".MovieDetailActivity">
+            android:name=".TrailersActivity"
+            android:label="@string/title_activity_trailers"
+            android:parentActivityName=".MovieDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.toolinc.movie.MovieDetailActivity" />
+        </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:label="@string/title_activity_video"
+            android:parentActivityName=".TrailersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.toolinc.movie.TrailersActivity" />
         </activity>
     </application>
 

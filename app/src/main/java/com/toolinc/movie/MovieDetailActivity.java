@@ -73,7 +73,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Intent intent = new Intent(MovieDetailActivity.this, VideoActivity.class);
+            Intent intent = new Intent(MovieDetailActivity.this, TrailersActivity.class);
             intent.putExtra(Intent.EXTRA_KEY_EVENT, movie);
             startActivity(intent);
           }

@@ -51,7 +51,7 @@
         "personally recommend you give it a go._"
     </string>
     <!-- Trailers Activity -->
-    <string name="title_activity_trailer">Trailers</string>
+    <string name="title_activity_trailers">Trailers</string>
     <string name="loading_trailers_msg" translatable="false">
         Loading the trailers for this movie.
     </string>
