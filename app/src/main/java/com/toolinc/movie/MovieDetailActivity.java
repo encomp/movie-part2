@@ -19,6 +19,7 @@ import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.client.model.Reviews;
 import com.toolinc.movie.client.model.Videos;
+import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.persistence.MovieRepository;
 import com.toolinc.movie.persistence.model.MovieEntity;
 
@@ -61,7 +62,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
   @BindView(R.id.tv_release_date)
   TextView tvReleaseDate;
 
-  private Movie movie;
+  private MovieModel movieModel;
   private MovieRepository movieRepository;
 
   @Override
@@ -74,12 +75,12 @@ public final class MovieDetailActivity extends AppCompatActivity {
     movieRepository = MovieRepository.create(getApplication());
 
     if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
-      movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
-      displayMovieDetailInfo(movie);
-      fetchReviews(MovieClient.create().reviews(movie.id()));
-      fetchTrailers(MovieClient.create().videos(movie.id()));
+      movieModel = (MovieModel) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
+      displayMovieDetailInfo(movieModel);
+      fetchReviews(MovieClient.create().reviews(movieModel.id()));
+      fetchTrailers(MovieClient.create().videos(movieModel.id()));
       movieRepository
-          .findById(movie.id())
+          .findById(movieModel.id())
           .observe(
               this,
               new Observer<MovieEntity>() {
@@ -104,9 +105,10 @@ public final class MovieDetailActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            String msg = String.format(getString(R.string.insert_movie_msg), movie.originalTitle());
+            String msg =
+                String.format(getString(R.string.insert_movie_msg), movieModel.originalTitle());
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            movieRepository.insert(new MovieEntity(movie));
+            movieRepository.insert(new MovieEntity(movieModel));
             MovieDetailActivity.this.finish();
           }
         });
@@ -114,9 +116,10 @@ public final class MovieDetailActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            String msg = String.format(getString(R.string.delete_movie_msg), movie.originalTitle());
+            String msg =
+                String.format(getString(R.string.delete_movie_msg), movieModel.originalTitle());
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            movieRepository.delete(new MovieEntity(movie));
+            movieRepository.delete(new MovieEntity(movieModel));
             MovieDetailActivity.this.finish();
           }
         });
@@ -125,7 +128,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
           @Override
           public void onClick(View view) {
             Intent intent = new Intent(MovieDetailActivity.this, TrailersActivity.class);
-            intent.putExtra(Intent.EXTRA_KEY_EVENT, movie);
+            intent.putExtra(Intent.EXTRA_KEY_EVENT, movieModel);
             startActivity(intent);
           }
         });
@@ -134,13 +137,13 @@ public final class MovieDetailActivity extends AppCompatActivity {
           @Override
           public void onClick(View view) {
             Intent intent = new Intent(MovieDetailActivity.this, ReviewsActivity.class);
-            intent.putExtra(Intent.EXTRA_KEY_EVENT, movie);
+            intent.putExtra(Intent.EXTRA_KEY_EVENT, movieModel);
             startActivity(intent);
           }
         });
   }
 
-  private void displayMovieDetailInfo(Movie movie) {
+  private void displayMovieDetailInfo(MovieModel movie) {
     Picasso.get()
         .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
         .into(ivPoster);

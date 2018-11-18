@@ -48,7 +48,7 @@ public class MovieEntity implements MovieModel {
   }
 
   @Ignore
-  public MovieEntity(Movie movie) {
+  public MovieEntity(MovieModel movie) {
     this(
         movie.id(),
         movie.originalTitle(),
