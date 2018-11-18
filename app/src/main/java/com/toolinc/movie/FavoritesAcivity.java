@@ -21,7 +21,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class FavoritesAcivity extends AppCompatActivity {
+/**
+ * Defines the behavior of the {@code R.layout.activity_favorites_acivity} that displays the list of
+ * {@link MovieEntity} that are stored on the SQLite.
+ */
+public final class FavoritesAcivity extends AppCompatActivity {
 
   private RecyclerView recyclerView;
   private MovieRepository movieRepository;

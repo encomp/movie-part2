@@ -58,6 +58,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
     return movies.size();
   }
 
+  /** Specifies the behavior upon selection of a {@link MovieModel}. */
+  public interface OnMovieSelected {
+
+    /** Specifies the movie that has been selected by the user. */
+    void onSelected(MovieModel movie);
+  }
+
   /** Describes a movie item about its place within the RecyclerView. */
   public final class MoviesViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener {
@@ -78,12 +85,5 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
         onMovieSelected.get().onSelected(movies.get(getAdapterPosition()));
       }
     }
-  }
-
-  /** Specifies the behavior upon selection of a {@link MovieModel}. */
-  public interface OnMovieSelected {
-
-    /** Specifies the movie that has been selected by the user. */
-    void onSelected(MovieModel movie);
   }
 }

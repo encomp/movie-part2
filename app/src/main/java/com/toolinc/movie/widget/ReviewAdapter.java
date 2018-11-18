@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.toolinc.movie.databinding.ReviewsListItemReviewBinding;
 import com.toolinc.movie.client.model.Review;
+import com.toolinc.movie.databinding.ReviewsListItemReviewBinding;
 
 /**
  * ReviewAdapter provides a binding from an {@link ImmutableList} of {@link Review} to the view

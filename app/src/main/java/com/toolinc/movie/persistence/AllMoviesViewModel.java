@@ -8,7 +8,8 @@ import com.toolinc.movie.persistence.model.MovieEntity;
 
 import java.util.List;
 
-public class AllMoviesViewModel extends AndroidViewModel {
+/** AllMoviesViewModel responsibility is to manage the data for the UI. */
+public final class AllMoviesViewModel extends AndroidViewModel {
 
   private final MovieRepository movieRepository;
 

@@ -5,8 +5,15 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-public class AppExecutors {
+/**
+ * Global executor pools for the whole application.
+ *
+ * <p>Grouping tasks like this avoids the effects of task starvation (e.g. disk reads don't wait
+ * behind webservice requests).
+ */
+public final class AppExecutors {
   private static final Object LOCK = new Object();
   private static AppExecutors sInstance;
   private final Executor diskIO;
@@ -24,8 +31,8 @@ public class AppExecutors {
       synchronized (LOCK) {
         sInstance =
             new AppExecutors(
-                java.util.concurrent.Executors.newSingleThreadExecutor(),
-                java.util.concurrent.Executors.newFixedThreadPool(3),
+                Executors.newSingleThreadExecutor(),
+                Executors.newFixedThreadPool(3),
                 new MainThreadExecutor());
       }
     }

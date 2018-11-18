@@ -86,8 +86,8 @@ public final class TrailersActivity extends AppCompatActivity
 
   @Override
   public void onSelected(Video video) {
-      Intent intent = new Intent(this, VideoActivity.class);
-      intent.putExtra(Intent.EXTRA_KEY_EVENT, video);
-      startActivity(intent);
+    Intent intent = new Intent(this, VideoActivity.class);
+    intent.putExtra(Intent.EXTRA_KEY_EVENT, video);
+    startActivity(intent);
   }
 }

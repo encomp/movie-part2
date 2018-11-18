@@ -26,7 +26,7 @@ import retrofit2.Response;
  * Defines the behavior of the {@code R.layout.activity_reviews} to display all the reviews
  * available for a given movie.
  */
-public class ReviewsActivity extends AppCompatActivity implements Callback<Reviews> {
+public final class ReviewsActivity extends AppCompatActivity implements Callback<Reviews> {
 
   private Movie movie;
   private ImageView ivPoster;

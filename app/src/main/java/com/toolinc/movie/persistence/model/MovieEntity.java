@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.model.MovieModel;
 
+/** Specifes the {@link MovieModel} entity that will be store on SQLite. */
 @Entity(tableName = "movieTable")
 public class MovieEntity implements MovieModel {
   @PrimaryKey

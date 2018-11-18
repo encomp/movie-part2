@@ -11,6 +11,7 @@ import com.toolinc.movie.persistence.model.MovieEntity;
 
 import java.util.List;
 
+/** Specifies the data access object behavior for the {@link MovieEntity}. */
 @Dao
 public interface MovieDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)

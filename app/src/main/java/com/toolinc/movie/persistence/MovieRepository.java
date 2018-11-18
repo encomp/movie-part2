@@ -9,12 +9,19 @@ import com.toolinc.movie.persistence.model.MovieEntity;
 
 import java.util.List;
 
+/**
+ * MovieRepository hides the async thread execution for insert, delete and retrieval of infomration.
+ */
 public final class MovieRepository {
 
   private final MovieDao movieDao;
 
   MovieRepository(Application application) {
     movieDao = MovieRoomDatabase.getDatabase(application).movieDao();
+  }
+
+  public static MovieRepository create(Application application) {
+    return new MovieRepository(application);
   }
 
   LiveData<List<MovieEntity>> getAllMovies() {
@@ -35,9 +42,5 @@ public final class MovieRepository {
 
   public void deleteAll() {
     AppExecutors.getInstance().diskIO().execute(() -> movieDao.deleteAll());
-  }
-
-  public static MovieRepository create(Application application) {
-    return new MovieRepository(application);
   }
 }

@@ -8,13 +8,12 @@ import android.content.Context;
 import com.toolinc.movie.persistence.dao.MovieDao;
 import com.toolinc.movie.persistence.model.MovieEntity;
 
+/** MovieRoomDatabase provides direct access to the underlying database. */
 @Database(
     entities = {MovieEntity.class},
     exportSchema = false,
     version = 1)
 abstract class MovieRoomDatabase extends RoomDatabase {
-
-  public abstract MovieDao movieDao();
 
   private static volatile MovieRoomDatabase INSTANCE;
 
@@ -31,4 +30,6 @@ abstract class MovieRoomDatabase extends RoomDatabase {
     }
     return INSTANCE;
   }
+
+  public abstract MovieDao movieDao();
 }

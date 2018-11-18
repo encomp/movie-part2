@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.toolinc.movie.databinding.TrailersListItemVideoBinding;
 import com.toolinc.movie.client.model.Video;
+import com.toolinc.movie.databinding.TrailersListItemVideoBinding;
 
 /**
  * TrailerAdapter provides a binding from an {@link ImmutableList} of {@link Video} to the view
@@ -45,6 +45,13 @@ public final class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.Tr
     return videos.size();
   }
 
+  /** Specifies the behavior upon selection of a {@link Video}. */
+  public interface OnVideoSelected {
+
+    /** Specifies the movie that has been selected by the user. */
+    void onSelected(Video video);
+  }
+
   /** Describes a review item about its place within the RecyclerView. */
   public final class TrailerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -65,12 +72,5 @@ public final class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.Tr
     void bind(Video video) {
       videoBinding.setVideo(video);
     }
-  }
-
-  /** Specifies the behavior upon selection of a {@link Video}. */
-  public interface OnVideoSelected {
-
-    /** Specifies the movie that has been selected by the user. */
-    void onSelected(Video video);
   }
 }
