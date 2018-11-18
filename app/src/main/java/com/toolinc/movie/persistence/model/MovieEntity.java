@@ -5,36 +5,73 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.toolinc.movie.model.MovieModel;
+
 @Entity(tableName = "movieTable")
-public class MovieEntity {
+public class MovieEntity implements MovieModel {
   @PrimaryKey
   @NonNull
   @ColumnInfo(name = "movieId")
   private String id;
 
-  @NonNull
   @ColumnInfo(name = "title")
-  private String title;
+  private String originalTitle;
 
-  @NonNull
   @ColumnInfo(name = "posterPath")
   private String posterPath;
 
-  public MovieEntity(String id, String title, String posterPath) {
+  @ColumnInfo(name = "overview")
+  private String overview;
+
+  @ColumnInfo(name = "voteAverage")
+  private String voteAverage;
+
+  @ColumnInfo(name = "releaseDate")
+  private String releaseDate;
+
+  public MovieEntity(
+      String id,
+      String originalTitle,
+      String posterPath,
+      String overview,
+      String voteAverage,
+      String releaseDate) {
     this.id = id;
-    this.title = title;
+    this.originalTitle = originalTitle;
     this.posterPath = posterPath;
+    this.overview = overview;
+    this.voteAverage = voteAverage;
+    this.releaseDate = releaseDate;
   }
 
-  public String getId() {
+  @Override
+  public String id() {
     return id;
   }
 
-  public String getTitle() {
-    return title;
+  @Override
+  public String originalTitle() {
+    return originalTitle;
   }
 
-  public String getPosterPath() {
+  @Override
+  public String posterPath() {
     return posterPath;
   }
+
+  @Override
+  public String overview() {
+    return overview;
+  }
+
+  @Override
+  public String voteAverage() {
+    return voteAverage;
+  }
+
+  @Override
+  public String releaseDate() {
+    return null;
+  }
+
 }

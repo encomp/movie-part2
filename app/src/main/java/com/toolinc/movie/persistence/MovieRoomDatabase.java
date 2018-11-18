@@ -10,8 +10,9 @@ import com.toolinc.movie.persistence.model.MovieEntity;
 
 @Database(
     entities = {MovieEntity.class},
+    exportSchema = false,
     version = 1)
-public abstract class MovieRoomDatabase extends RoomDatabase {
+abstract class MovieRoomDatabase extends RoomDatabase {
 
   public abstract MovieDao movieDao();
 

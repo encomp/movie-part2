@@ -1,16 +1,15 @@
-package com.toolinc.movie.persistence.repository;
+package com.toolinc.movie.persistence;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import com.toolinc.movie.persistence.MovieRoomDatabase;
 import com.toolinc.movie.persistence.dao.MovieDao;
 import com.toolinc.movie.persistence.model.MovieEntity;
 
 import java.util.List;
 
-public class MovieRepository {
+public final class MovieRepository {
 
   private MovieDao movieDao;
   private LiveData<List<MovieEntity>> allMovies;

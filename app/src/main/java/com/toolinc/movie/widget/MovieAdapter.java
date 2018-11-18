@@ -12,21 +12,29 @@ import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.BuildConfig;
 import com.toolinc.movie.R;
-import com.toolinc.movie.client.model.Movie;
+import com.toolinc.movie.model.MovieModel;
+
+import java.util.Optional;
 
 /**
- * MovieAdapter provides a binding from an {@link ImmutableList} of {@link Movie} to the view {@code
- * R.layout.movies_list_item_movie} displayed within a RecyclerView.
+ * MovieAdapter provides a binding from an {@link ImmutableList} of {@link MovieModel} to the view
+ * {@code R.layout.movies_list_item_movie} displayed within a RecyclerView.
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHolder> {
 
-  private final ImmutableList<Movie> movies;
-  private final OnMovieSelected onMovieSelected;
+  private final ImmutableList<MovieModel> movies;
+  private final Optional<OnMovieSelected> onMovieSelected;
 
-  public MovieAdapter(ImmutableList<Movie> movies, OnMovieSelected onMovieSelected) {
+  public MovieAdapter(ImmutableList<MovieModel> movies) {
+    this.movies = Preconditions.checkNotNull(movies, "Movies are missing.");
+    onMovieSelected = Optional.empty();
+  }
+
+  public MovieAdapter(ImmutableList<MovieModel> movies, OnMovieSelected onMovieSelected) {
     this.movies = Preconditions.checkNotNull(movies, "Movies are missing.");
     this.onMovieSelected =
-        Preconditions.checkNotNull(onMovieSelected, "Missing the selection movie listener.");
+        Optional.of(
+            Preconditions.checkNotNull(onMovieSelected, "Missing the selection movie listener."));
   }
 
   @NonNull
@@ -39,7 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
 
   @Override
   public void onBindViewHolder(@NonNull MoviesViewHolder moviesViewHolder, int position) {
-    Movie movie = movies.get(position);
+    MovieModel movie = movies.get(position);
     Picasso.get()
         .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
         .into(moviesViewHolder.ivPoster);
@@ -59,19 +67,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
     public MoviesViewHolder(View view) {
       super(view);
       ivPoster = (ImageView) view.findViewById(R.id.iv_movie_poster);
-      ivPoster.setOnClickListener(this);
+      if (onMovieSelected.isPresent()) {
+        ivPoster.setOnClickListener(this);
+      }
     }
 
     @Override
     public void onClick(View v) {
-      onMovieSelected.onSelected(movies.get(getAdapterPosition()));
+      if (onMovieSelected.isPresent()) {
+        onMovieSelected.get().onSelected(movies.get(getAdapterPosition()));
+      }
     }
   }
 
-  /** Specifies the behavior upon selection of a {@link Movie}. */
+  /** Specifies the behavior upon selection of a {@link MovieModel}. */
   public interface OnMovieSelected {
 
     /** Specifies the movie that has been selected by the user. */
-    void onSelected(Movie movie);
+    void onSelected(MovieModel movie);
   }
 }

@@ -17,9 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.common.collect.ImmutableList;
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.client.model.Movies;
+import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.widget.MovieAdapter;
 
 import retrofit2.Call;
@@ -105,10 +106,11 @@ public final class MoviesActivity extends AppCompatActivity
   @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     int id = item.getItemId();
-    if (id == R.id.nav_gallery) {
-
+    if (id == R.id.nav_favorites) {
+      Intent intent = new Intent(this, FavoritesAcivity.class);
+      startActivity(intent);
     } else if (id == R.id.nav_settings) {
-
+      // TODO
     }
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
@@ -116,7 +118,7 @@ public final class MoviesActivity extends AppCompatActivity
   }
 
   @Override
-  public void onSelected(Movie movie) {
+  public void onSelected(MovieModel movie) {
     Intent intent = new Intent(this, MovieDetailActivity.class);
     intent.putExtra(Intent.EXTRA_KEY_EVENT, movie);
     startActivity(intent);
@@ -133,7 +135,8 @@ public final class MoviesActivity extends AppCompatActivity
   public void onResponse(Call<Movies> call, Response<Movies> response) {
     progressBar.setVisibility(View.INVISIBLE);
     Movies movies = response.body();
-    MovieAdapter moviesAdapter = new MovieAdapter(movies.movies(), MoviesActivity.this);
+    MovieAdapter moviesAdapter =
+        new MovieAdapter(ImmutableList.copyOf(movies.movies()), MoviesActivity.this);
     recyclerView.setAdapter(moviesAdapter);
     recyclerView.setVisibility(View.VISIBLE);
   }

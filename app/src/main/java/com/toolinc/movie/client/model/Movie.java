@@ -8,31 +8,20 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.toolinc.movie.model.MovieModel;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 @AutoValue
-public abstract class Movie implements Serializable {
+public abstract class Movie implements MovieModel {
 
   @NonNull
   public static final Builder builder() {
     return new Builder();
   }
 
-  public abstract String id();
-
-  public abstract String originalTitle();
-
-  public abstract String posterPath();
-
-  public abstract String overview();
-
-  public abstract String voteAverage();
-
-  public abstract String releaseDate();
-
   public static final class Builder extends TypeAdapter<Movie> {
+    private static final String EMPTY = "";
     private static final Gson GSON = new Gson();
 
     @SerializedName("id")
