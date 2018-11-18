@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.base.Optional;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.client.model.Movie;
@@ -21,8 +22,8 @@ import com.toolinc.movie.client.model.Videos;
 import com.toolinc.movie.persistence.MovieRepository;
 import com.toolinc.movie.persistence.model.MovieEntity;
 
-import java.util.Optional;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,32 +34,43 @@ import retrofit2.Response;
  */
 public final class MovieDetailActivity extends AppCompatActivity {
 
+  @BindView(R.id.fab_add)
+  FloatingActionButton fabAdd;
+
+  @BindView(R.id.fab_remove)
+  FloatingActionButton fabRemove;
+
+  @BindView(R.id.fab_review)
+  FloatingActionButton fabReview;
+
+  @BindView(R.id.fab_trailer)
+  FloatingActionButton fabTrailer;
+
+  @BindView(R.id.iv_movie_poster)
+  ImageView ivPoster;
+
+  @BindView(R.id.tv_movie_title)
+  TextView tvMovieTitle;
+
+  @BindView(R.id.tv_movie_overview)
+  TextView tvMovieOverview;
+
+  @BindView(R.id.tv_vote_average)
+  RatingBar tvVoteAverage;
+
+  @BindView(R.id.tv_release_date)
+  TextView tvReleaseDate;
+
   private Movie movie;
-  private FloatingActionButton fabAdd;
-  private FloatingActionButton fabRemove;
-  private FloatingActionButton fabReview;
-  private FloatingActionButton fabTrailer;
-  private ImageView ivPoster;
-  private TextView tvMovieTitle;
-  private TextView tvMovieOverview;
-  private RatingBar tvVoteAverage;
-  private TextView tvReleaseDate;
   private MovieRepository movieRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_movie_detail);
-
-    fabAdd = (FloatingActionButton) findViewById(R.id.fab_add);
-    fabRemove = (FloatingActionButton) findViewById(R.id.fab_remove);
-    fabReview = ((FloatingActionButton) findViewById(R.id.fab_review));
-    fabTrailer = ((FloatingActionButton) findViewById(R.id.fab_trailer));
-    ivPoster = (ImageView) findViewById(R.id.iv_movie_poster);
-    tvMovieTitle = (TextView) findViewById(R.id.tv_movie_title);
-    tvMovieOverview = (TextView) findViewById(R.id.tv_movie_overview);
-    tvVoteAverage = (RatingBar) findViewById(R.id.tv_vote_average);
-    tvReleaseDate = (TextView) findViewById(R.id.tv_release_date);
+    // Bind the UI elements
+    ButterKnife.bind(this);
+    // Create a new Repository
     movieRepository = MovieRepository.create(getApplication());
 
     if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
@@ -73,7 +85,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
               new Observer<MovieEntity>() {
                 @Override
                 public void onChanged(@Nullable MovieEntity movieEntity) {
-                  Optional<MovieEntity> optionalMovie = Optional.ofNullable(movieEntity);
+                  Optional<MovieEntity> optionalMovie = Optional.fromNullable(movieEntity);
                   if (optionalMovie.isPresent()) {
                     fabAdd.hide();
                     fabRemove.show();
