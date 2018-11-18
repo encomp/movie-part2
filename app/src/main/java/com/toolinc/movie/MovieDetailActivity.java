@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
@@ -91,8 +92,8 @@ public final class MovieDetailActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            String msg = String.format("Saving the movie [%s]", movie.toString());
-            Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+            String msg = String.format(getString(R.string.insert_movie_msg), movie.originalTitle());
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             movieRepository.insert(new MovieEntity(movie));
             MovieDetailActivity.this.finish();
           }
@@ -101,8 +102,8 @@ public final class MovieDetailActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            String msg = String.format("Saving the movie [%s]", movie.toString());
-            Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+            String msg = String.format(getString(R.string.delete_movie_msg), movie.originalTitle());
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             movieRepository.delete(new MovieEntity(movie));
             MovieDetailActivity.this.finish();
           }

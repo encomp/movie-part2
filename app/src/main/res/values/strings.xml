@@ -29,6 +29,8 @@
     <string name="trailer_label" translatable="false">Trailer</string>
     <string name="review_label" translatable="false">Review</string>
     <string name="cd_poster_movie">Movie poster</string>
+    <string name="insert_movie_msg" translatable="false">%s was added.</string>
+    <string name="delete_movie_msg" translatable="false">%s was removed.</string>
     <!-- Review Activity -->
     <string name="loading_reviews_msg" translatable="false">
         Loading the videos for this movie.

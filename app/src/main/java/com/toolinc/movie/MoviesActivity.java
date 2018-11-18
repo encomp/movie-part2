@@ -84,9 +84,6 @@ public final class MoviesActivity extends AppCompatActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
-    if (id == R.id.action_settings) {
-      return true;
-    }
     if (R.id.mi_movie == item.getItemId()) {
       String title = item.getTitle().toString();
       Call<Movies> call = null;
@@ -108,8 +105,6 @@ public final class MoviesActivity extends AppCompatActivity
     if (id == R.id.nav_favorites) {
       Intent intent = new Intent(this, FavoritesAcivity.class);
       startActivity(intent);
-    } else if (id == R.id.nav_settings) {
-      // TODO
     }
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
