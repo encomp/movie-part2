@@ -18,8 +18,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.model.Movie;
-import com.toolinc.movie.model.Movies;
+import com.toolinc.movie.client.model.Movie;
+import com.toolinc.movie.client.model.Movies;
 import com.toolinc.movie.widget.MovieAdapter;
 
 import retrofit2.Call;

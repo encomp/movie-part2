@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.toolinc.movie.databinding.TrailersListItemVideoBinding;
-import com.toolinc.movie.model.Video;
+import com.toolinc.movie.client.model.Video;
 
 /**
  * TrailerAdapter provides a binding from an {@link ImmutableList} of {@link Video} to the view

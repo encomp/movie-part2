@@ -14,8 +14,8 @@ import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.model.Movie;
-import com.toolinc.movie.model.Reviews;
+import com.toolinc.movie.client.model.Movie;
+import com.toolinc.movie.client.model.Reviews;
 import com.toolinc.movie.widget.ReviewAdapter;
 
 import retrofit2.Call;

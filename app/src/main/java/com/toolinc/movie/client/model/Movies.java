@@ -1,4 +1,4 @@
-package com.toolinc.movie.model;
+package com.toolinc.movie.client.model;
 
 import android.support.annotation.NonNull;
 
@@ -16,38 +16,38 @@ import java.io.Serializable;
 import java.util.List;
 
 @AutoValue
-public abstract class Videos implements Serializable {
+public abstract class Movies implements Serializable {
 
   @NonNull
   public static final Builder builder() {
     return new Builder();
   }
 
-  public abstract int id();
+  public abstract int page();
 
-  public abstract ImmutableList<Video> videos();
+  public abstract ImmutableList<Movie> movies();
 
-  public static final class Builder extends TypeAdapter<Videos> {
+  public static final class Builder extends TypeAdapter<Movies> {
     private static final Gson GSON =
-        new GsonBuilder().registerTypeAdapter(Video.class, Video.builder()).create();
+        new GsonBuilder().registerTypeAdapter(Movie.class, Movie.builder()).create();
 
-    @SerializedName("id")
-    private int id;
+    @SerializedName("page")
+    private int page;
 
     @SerializedName("results")
-    private List<Video> videos;
+    private List<Movie> movies;
 
     private Builder() {}
 
-    public Videos build() {
-      return new AutoValue_Videos(id, ImmutableList.copyOf(videos));
+    public Movies build() {
+      return new AutoValue_Movies(page, ImmutableList.copyOf(movies));
     }
 
     @Override
-    public void write(JsonWriter out, Videos value) throws IOException {}
+    public void write(JsonWriter out, Movies value) throws IOException {}
 
     @Override
-    public Videos read(JsonReader in) throws IOException {
+    public Movies read(JsonReader in) throws IOException {
       Builder builder = GSON.fromJson(in, Builder.class);
       return builder.build();
     }

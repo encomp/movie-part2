@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.BuildConfig;
 import com.toolinc.movie.R;
-import com.toolinc.movie.model.Movie;
+import com.toolinc.movie.client.model.Movie;
 
 /**
  * MovieAdapter provides a binding from an {@link ImmutableList} of {@link Movie} to the view {@code

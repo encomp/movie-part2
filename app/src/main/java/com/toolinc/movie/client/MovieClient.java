@@ -2,9 +2,9 @@ package com.toolinc.movie.client;
 
 import com.google.gson.GsonBuilder;
 import com.toolinc.movie.BuildConfig;
-import com.toolinc.movie.model.Movies;
-import com.toolinc.movie.model.Reviews;
-import com.toolinc.movie.model.Videos;
+import com.toolinc.movie.client.model.Movies;
+import com.toolinc.movie.client.model.Reviews;
+import com.toolinc.movie.client.model.Videos;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

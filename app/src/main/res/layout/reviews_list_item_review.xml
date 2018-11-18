@@ -9,7 +9,7 @@
 
         <variable
             name="review"
-            type="com.toolinc.movie.model.Review" />
+            type="com.toolinc.movie.client.model.Review" />
     </data>
 
     <android.support.v7.widget.CardView

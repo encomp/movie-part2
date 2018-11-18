@@ -1,4 +1,4 @@
-package com.toolinc.movie.model;
+package com.toolinc.movie.client.model;
 
 import android.support.annotation.NonNull;
 

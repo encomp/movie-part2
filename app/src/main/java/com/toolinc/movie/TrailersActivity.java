@@ -14,9 +14,9 @@ import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.model.Movie;
-import com.toolinc.movie.model.Video;
-import com.toolinc.movie.model.Videos;
+import com.toolinc.movie.client.model.Movie;
+import com.toolinc.movie.client.model.Video;
+import com.toolinc.movie.client.model.Videos;
 import com.toolinc.movie.widget.TrailerAdapter;
 
 import retrofit2.Call;

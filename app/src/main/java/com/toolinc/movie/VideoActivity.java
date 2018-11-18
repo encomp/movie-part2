@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebChromeClient;
 
 import com.toolinc.movie.databinding.ActivityVideoBinding;
-import com.toolinc.movie.model.Video;
+import com.toolinc.movie.client.model.Video;
 
 /** Defines the behavior of the {@code R.layout.activity_video} to play a video. */
 public class VideoActivity extends AppCompatActivity {

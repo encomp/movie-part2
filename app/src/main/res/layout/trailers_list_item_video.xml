@@ -9,7 +9,7 @@
 
         <variable
             name="video"
-            type="com.toolinc.movie.model.Video" />
+            type="com.toolinc.movie.client.model.Video" />
     </data>
 
     <android.support.v7.widget.CardView

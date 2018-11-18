@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.model.Movie;
-import com.toolinc.movie.model.Reviews;
-import com.toolinc.movie.model.Videos;
+import com.toolinc.movie.client.model.Movie;
+import com.toolinc.movie.client.model.Reviews;
+import com.toolinc.movie.client.model.Videos;
 
 import retrofit2.Call;
 import retrofit2.Callback;
