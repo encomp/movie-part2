@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.BuildConfig;
 import com.toolinc.movie.databinding.MoviesListItemMovieBinding;
@@ -20,19 +21,25 @@ import com.toolinc.movie.model.MovieModel;
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHolder> {
 
-  private final ImmutableList<MovieModel> movies;
   private final Optional<OnMovieSelected> onMovieSelected;
+  private ImmutableList<MovieModel> movies = ImmutableList.copyOf(Lists.newArrayList());
 
-  public MovieAdapter(ImmutableList<MovieModel> movies) {
-    this.movies = Preconditions.checkNotNull(movies, "Movies are missing.");
+  public MovieAdapter() {
     onMovieSelected = Optional.absent();
   }
 
+  public MovieAdapter(ImmutableList<MovieModel> movies) {
+    this.setMovies(movies);
+    onMovieSelected = Optional.absent();
+  }
+
+  public MovieAdapter(OnMovieSelected onMovieSelected) {
+    this.onMovieSelected = validateOnMovieSelected(onMovieSelected);
+  }
+
   public MovieAdapter(ImmutableList<MovieModel> movies, OnMovieSelected onMovieSelected) {
-    this.movies = Preconditions.checkNotNull(movies, "Movies are missing.");
-    this.onMovieSelected =
-        Optional.of(
-            Preconditions.checkNotNull(onMovieSelected, "Missing the selection movie listener."));
+    this(onMovieSelected);
+    this.setMovies(movies);
   }
 
   @NonNull
@@ -55,6 +62,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
   @Override
   public int getItemCount() {
     return movies.size();
+  }
+
+  @NonNull
+  private Optional<OnMovieSelected> validateOnMovieSelected(OnMovieSelected onMovieSelected) {
+    return Optional.of(
+        Preconditions.checkNotNull(onMovieSelected, "Missing the selection movie listener."));
+  }
+
+  public void setMovies(ImmutableList<MovieModel> movies) {
+    if (Optional.fromNullable(movies).isPresent()) {
+      this.movies = movies;
+    } else {
+      this.movies = ImmutableList.copyOf(Lists.newArrayList());
+    }
+  }
+
+  public ImmutableList<MovieModel> getMovies() {
+    return movies;
   }
 
   /** Specifies the behavior upon selection of a {@link MovieModel}. */

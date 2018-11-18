@@ -5,6 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_movies"
+            android:icon="@drawable/ic_menu_video_library"
+            android:title="@string/action_movies" />
+        <item
             android:id="@+id/nav_favorites"
             android:icon="@drawable/ic_menu_favorite"
             android:title="@string/action_favorites" />
