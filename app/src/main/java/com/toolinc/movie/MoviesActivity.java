@@ -54,6 +54,15 @@ public final class MoviesActivity extends AppCompatActivity
   @BindView(R.id.recyclerview_movies)
   RecyclerView recyclerView;
 
+  private static int calculateNoOfColumns(Context context) {
+    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+    int scalingFactor = 200;
+    int noOfColumns = (int) (dpWidth / scalingFactor);
+    if (noOfColumns < 2) noOfColumns = 2;
+    return noOfColumns;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -98,18 +107,19 @@ public final class MoviesActivity extends AppCompatActivity
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-    if (R.id.mi_movie == item.getItemId()) {
-      String title = item.getTitle().toString();
-      Call<Movies> call = null;
-      if (title.equals(getString(R.string.popular_movies))) {
-        call = MovieClient.create().popular();
-        item.setTitle(R.string.top_movies);
-      } else {
-        call = MovieClient.create().topRated();
-        item.setTitle(R.string.popular_movies);
-      }
-      fetchMovies(call);
+    switch (item.getItemId()) {
+      case R.id.mi_movie:
+        String title = item.getTitle().toString();
+        Call<Movies> call = null;
+        if (title.equals(getString(R.string.popular_movies))) {
+          call = MovieClient.create().popular();
+          item.setTitle(R.string.top_movies);
+        } else {
+          call = MovieClient.create().topRated();
+          item.setTitle(R.string.popular_movies);
+        }
+        fetchMovies(call);
+        return true;
     }
     return super.onOptionsItemSelected(item);
   }
@@ -154,14 +164,5 @@ public final class MoviesActivity extends AppCompatActivity
     recyclerView.setVisibility(View.INVISIBLE);
     Snackbar.make(recyclerView, getString(R.string.loading_movies_error_msg), Snackbar.LENGTH_LONG)
         .show();
-  }
-
-  private static int calculateNoOfColumns(Context context) {
-    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-    float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-    int scalingFactor = 200;
-    int noOfColumns = (int) (dpWidth / scalingFactor);
-    if (noOfColumns < 2) noOfColumns = 2;
-    return noOfColumns;
   }
 }

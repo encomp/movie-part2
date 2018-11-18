@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -63,6 +64,17 @@ public final class ReviewsActivity extends AppCompatActivity implements Callback
           .into(ivPoster);
       fetchReviews(MovieClient.create().reviews(movie.id()));
     }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   private void fetchReviews(Call<Reviews> call) {

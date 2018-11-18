@@ -6,7 +6,6 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.model.MovieModel;
 
 /** Specifes the {@link MovieModel} entity that will be store on SQLite. */

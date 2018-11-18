@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -43,31 +44,66 @@ public final class MovieDetailActivity extends AppCompatActivity {
 
   @BindView(R.id.fab_review)
   FloatingActionButton fabReview;
+  private final Callback<Reviews> reviewsCallback =
+      new Callback<Reviews>() {
 
+        @Override
+        public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+          if (response.body().totalResults() > 0) {
+            fabReview.show();
+          } else {
+            fabReview.hide();
+          }
+        }
+
+        @Override
+        public void onFailure(Call<Reviews> call, Throwable t) {
+          fabReview.hide();
+          Snackbar.make(
+                  fabReview, getString(R.string.loading_reviews_error_msg), Snackbar.LENGTH_SHORT)
+              .show();
+        }
+      };
   @BindView(R.id.fab_trailer)
   FloatingActionButton fabTrailer;
+  private final Callback<Videos> videosCallback =
+      new Callback<Videos>() {
 
+        @Override
+        public void onResponse(Call<Videos> call, Response<Videos> response) {
+          if (response.body().videos().size() > 0) {
+            fabTrailer.show();
+          } else {
+            fabTrailer.hide();
+          }
+        }
+
+        @Override
+        public void onFailure(Call<Videos> call, Throwable t) {
+          fabTrailer.hide();
+          Snackbar.make(
+                  fabTrailer, getString(R.string.loading_trailers_error_msg), Snackbar.LENGTH_SHORT)
+              .show();
+        }
+      };
   @BindView(R.id.iv_movie_poster)
   ImageView ivPoster;
-
   @BindView(R.id.tv_movie_title)
   TextView tvMovieTitle;
-
   @BindView(R.id.tv_movie_overview)
   TextView tvMovieOverview;
-
   @BindView(R.id.tv_vote_average)
   RatingBar tvVoteAverage;
-
   @BindView(R.id.tv_release_date)
   TextView tvReleaseDate;
-
   private MovieModel movieModel;
   private MovieRepository movieRepository;
+  private Call<Reviews> reviewsCall;
+  private Call<Videos> videosCall;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
     setContentView(R.layout.activity_movie_detail);
     // Bind the UI elements
     ButterKnife.bind(this);
@@ -75,10 +111,69 @@ public final class MovieDetailActivity extends AppCompatActivity {
     movieRepository = MovieRepository.create(getApplication());
 
     if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
-      movieModel = (MovieModel) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
+      Optional<MovieModel> optional =
+          Optional.fromNullable(
+              (MovieModel) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT));
+      initMovie(optional);
+    } else {
+      loadFromBundle(Optional.fromNullable(bundle));
+    }
+    initListeners();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    Optional<Call<Reviews>> callReviewsOptional = Optional.fromNullable(reviewsCall);
+    if (callReviewsOptional.isPresent()) {
+      reviewsCall.cancel();
+    }
+    Optional<Call<Videos>> callVideosOptional = Optional.fromNullable(videosCall);
+    if (callVideosOptional.isPresent()) {
+      videosCall.cancel();
+    }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle bundle) {
+    super.onSaveInstanceState(bundle);
+    bundle.putSerializable(BuildConfig.MOVIE_STATE, movieModel);
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle bundle) {
+    super.onRestoreInstanceState(bundle);
+    loadFromBundle(Optional.fromNullable(bundle));
+  }
+
+  private void loadFromBundle(Optional<Bundle> bundleOptional) {
+    if (bundleOptional.isPresent()) {
+      Bundle bundle = bundleOptional.get();
+      Optional<MovieModel> optional =
+          Optional.fromNullable((MovieModel) bundle.getSerializable(BuildConfig.MOVIE_STATE));
+      initMovie(optional);
+    }
+  }
+
+  private void initMovie(Optional<MovieModel> movieModelOptional) {
+    if (movieModelOptional.isPresent()) {
+      movieModel = movieModelOptional.get();
       displayMovieDetailInfo(movieModel);
-      fetchReviews(MovieClient.create().reviews(movieModel.id()));
-      fetchTrailers(MovieClient.create().videos(movieModel.id()));
+      reviewsCall = MovieClient.create().reviews(movieModel.id());
+      videosCall = MovieClient.create().videos(movieModel.id());
+      reviewsCall.enqueue(reviewsCallback);
+      videosCall.enqueue(videosCallback);
       movieRepository
           .findById(movieModel.id())
           .observe(
@@ -97,7 +192,6 @@ public final class MovieDetailActivity extends AppCompatActivity {
                 }
               });
     }
-    initListeners();
   }
 
   private void initListeners() {
@@ -151,53 +245,5 @@ public final class MovieDetailActivity extends AppCompatActivity {
     tvMovieOverview.setText(movie.overview());
     tvVoteAverage.setRating(Float.valueOf(movie.voteAverage()) / 2);
     tvReleaseDate.setText(movie.releaseDate());
-  }
-
-  private void fetchReviews(Call<Reviews> call) {
-    call.enqueue(
-        new Callback<Reviews>() {
-
-          @Override
-          public void onResponse(Call<Reviews> call, Response<Reviews> response) {
-            if (response.body().totalResults() > 0) {
-              fabReview.show();
-            } else {
-              fabReview.hide();
-            }
-          }
-
-          @Override
-          public void onFailure(Call<Reviews> call, Throwable t) {
-            fabReview.hide();
-            Snackbar.make(
-                    fabReview, getString(R.string.loading_reviews_error_msg), Snackbar.LENGTH_SHORT)
-                .show();
-          }
-        });
-  }
-
-  private void fetchTrailers(Call<Videos> call) {
-    call.enqueue(
-        new Callback<Videos>() {
-
-          @Override
-          public void onResponse(Call<Videos> call, Response<Videos> response) {
-            if (response.body().videos().size() > 0) {
-              fabTrailer.show();
-            } else {
-              fabTrailer.hide();
-            }
-          }
-
-          @Override
-          public void onFailure(Call<Videos> call, Throwable t) {
-            fabTrailer.hide();
-            Snackbar.make(
-                    fabTrailer,
-                    getString(R.string.loading_trailers_error_msg),
-                    Snackbar.LENGTH_SHORT)
-                .show();
-          }
-        });
   }
 }

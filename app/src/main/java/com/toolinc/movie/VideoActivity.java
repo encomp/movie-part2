@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 
 import com.toolinc.movie.client.model.Video;
@@ -28,5 +29,16 @@ public final class VideoActivity extends AppCompatActivity {
       setTitle(video.name());
       binding.webView.loadUrl(String.format(BuildConfig.VIDEO_BASE_URL, video.key()));
     }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 }
