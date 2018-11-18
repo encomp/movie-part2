@@ -58,4 +58,6 @@
     <string name="loading_trailers_error_msg" translatable="false">
         Unable to retrieve the trailers for this movie ...
     </string>
+    <!-- Video Activity -->
+    <string name="title_activity_video">Trailer</string>
 </resources>

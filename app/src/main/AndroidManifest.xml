@@ -39,8 +39,8 @@
                 android:value="com.toolinc.movie.MovieDetailActivity" />
         </activity>
         <activity
-            android:name=".TrailersActivity"
-            android:label="@string/title_activity_trailer"
+            android:name=".VideoActivity"
+            android:label="@string/title_activity_video"
             android:parentActivityName=".MovieDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

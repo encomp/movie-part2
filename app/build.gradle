@@ -6,6 +6,7 @@ android {
         buildConfigField 'String', 'END_POINT', '"https://api.themoviedb.org/3/"'
         buildConfigField 'String', 'API_KEY', '"77e8be3f0855555a30a2bbcde0c9b820"'
         buildConfigField 'String', 'IMAGE_BASE_URL', '"https://image.tmdb.org/t/p/w500/%s"'
+        buildConfigField 'String', 'VIDEO_BASE_URL', '"https://www.youtube.com/embed/%s?autoplay=1"'
 
         applicationId "com.toolinc.movie"
         minSdkVersion 28
