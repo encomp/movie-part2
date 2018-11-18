@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.BuildConfig;
 import com.toolinc.movie.R;
 import com.toolinc.movie.model.MovieModel;
-
-import java.util.Optional;
 
 /**
  * MovieAdapter provides a binding from an {@link ImmutableList} of {@link MovieModel} to the view
@@ -27,7 +26,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
 
   public MovieAdapter(ImmutableList<MovieModel> movies) {
     this.movies = Preconditions.checkNotNull(movies, "Movies are missing.");
-    onMovieSelected = Optional.empty();
+    onMovieSelected = Optional.absent();
   }
 
   public MovieAdapter(ImmutableList<MovieModel> movies, OnMovieSelected onMovieSelected) {
