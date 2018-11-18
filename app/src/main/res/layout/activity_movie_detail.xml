@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,8 +20,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:src="@drawable/ic_menu_add_circle_outline"
+        android:focusable="true"
         android:visibility="invisible"
+        app:srcCompat="@drawable/ic_menu_add_circle_outline"
         tools:visibility="visible" />
 
     <android.support.design.widget.FloatingActionButton
@@ -30,6 +32,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:src="@drawable/ic_menu_remove_circle_outline"
-        android:visibility="invisible" />
+        android:focusable="true"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_menu_remove_circle_outline" />
 </android.support.design.widget.CoordinatorLayout>
