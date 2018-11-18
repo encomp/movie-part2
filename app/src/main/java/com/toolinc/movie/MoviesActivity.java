@@ -1,5 +1,6 @@
 package com.toolinc.movie;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +72,8 @@ public final class MoviesActivity extends AppCompatActivity
     toggle.syncState();
     navigationView.setNavigationItemSelectedListener(this);
 
-    GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+    GridLayoutManager layoutManager =
+        new GridLayoutManager(this, calculateNoOfColumns(getApplicationContext()));
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setHasFixedSize(true);
@@ -151,5 +154,14 @@ public final class MoviesActivity extends AppCompatActivity
     recyclerView.setVisibility(View.INVISIBLE);
     Snackbar.make(recyclerView, getString(R.string.loading_movies_error_msg), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  private static int calculateNoOfColumns(Context context) {
+    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+    int scalingFactor = 200;
+    int noOfColumns = (int) (dpWidth / scalingFactor);
+    if (noOfColumns < 2) noOfColumns = 2;
+    return noOfColumns;
   }
 }
