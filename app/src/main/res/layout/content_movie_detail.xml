@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:elevation="2dp"
         android:padding="16dp"
         app:cardCornerRadius="5dp">
 
@@ -94,14 +93,14 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:clickable="true"
-                android:src="@drawable/ic_menu_play_circle_outline"
+                android:focusable="true"
                 android:text="@string/trailer_label"
                 android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/fab_review"
                 app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                tools:visibility="visible"
-                android:focusable="true" />
+                app:srcCompat="@drawable/ic_menu_play_circle_outline"
+                tools:visibility="visible" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_review"
@@ -112,14 +111,14 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
                 android:clickable="true"
-                android:src="@drawable/ic_menu_rate_review"
+                android:focusable="true"
                 android:text="@string/review_label"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/fab_trailer"
                 app:layout_constraintTop_toTopOf="@+id/fab_trailer"
-                tools:visibility="visible"
-                android:focusable="true" />
+                app:srcCompat="@drawable/ic_menu_rate_review"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
