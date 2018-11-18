@@ -5,14 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.BuildConfig;
-import com.toolinc.movie.R;
+import com.toolinc.movie.databinding.MoviesListItemMovieBinding;
 import com.toolinc.movie.model.MovieModel;
 
 /**
@@ -40,8 +39,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
   @Override
   public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-    View view = inflater.inflate(R.layout.movies_list_item_movie, viewGroup, false);
-    return new MoviesViewHolder(view);
+    MoviesListItemMovieBinding movieBinding =
+        MoviesListItemMovieBinding.inflate(inflater, viewGroup, false);
+    return new MoviesViewHolder(movieBinding);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
     MovieModel movie = movies.get(position);
     Picasso.get()
         .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
-        .into(moviesViewHolder.ivPoster);
+        .into(moviesViewHolder.movieBinding.ivMoviePoster);
   }
 
   @Override
@@ -68,13 +68,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
   public final class MoviesViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener {
 
-    private final ImageView ivPoster;
+    private final MoviesListItemMovieBinding movieBinding;
 
-    public MoviesViewHolder(View view) {
-      super(view);
-      ivPoster = (ImageView) view.findViewById(R.id.iv_movie_poster);
+    public MoviesViewHolder(MoviesListItemMovieBinding movieBinding) {
+      super(movieBinding.getRoot());
+      this.movieBinding =
+          Preconditions.checkNotNull(movieBinding, "MoviesListItemMovieBinding is missing.");
       if (onMovieSelected.isPresent()) {
-        ivPoster.setOnClickListener(this);
+        movieBinding.ivMoviePoster.setOnClickListener(this);
       }
     }
 
