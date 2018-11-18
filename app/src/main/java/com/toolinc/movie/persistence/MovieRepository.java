@@ -33,6 +33,10 @@ public final class MovieRepository {
     AppExecutors.getInstance().diskIO().execute(() -> movieDao.delete(movieEntity));
   }
 
+  public void deleteAll() {
+    AppExecutors.getInstance().diskIO().execute(() -> movieDao.deleteAll());
+  }
+
   public static MovieRepository create(Application application) {
     return new MovieRepository(application);
   }

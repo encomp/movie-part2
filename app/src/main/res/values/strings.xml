@@ -3,6 +3,7 @@
     <!-- Movies Menu Labels -->
     <string name="action_gallery" translatable="false">Movies</string>
     <string name="action_settings" translatable="false">Settings</string>
+    <string name="action_delete_all" translatable="false">Delete All</string>
     <string name="action_favorites" translatable="false">My Movies</string>
     <string name="top_movies" translatable="false">Top Movies</string>
     <string name="popular_movies" translatable="false">Popular Movies</string>
