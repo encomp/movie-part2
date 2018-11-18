@@ -22,6 +22,8 @@ import com.toolinc.movie.client.model.Movies;
 import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.widget.MovieAdapter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,29 +37,39 @@ public final class MoviesActivity extends AppCompatActivity
         MovieAdapter.OnMovieSelected,
         Callback<Movies> {
 
-  private ProgressBar progressBar;
-  private RecyclerView recyclerView;
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+
+  @BindView(R.id.drawer_layout)
+  DrawerLayout drawerLayout;
+
+  @BindView(R.id.nav_view)
+  NavigationView navigationView;
+
+  @BindView(R.id.pb_loading_indicator)
+  ProgressBar progressBar;
+
+  @BindView(R.id.recyclerview_movies)
+  RecyclerView recyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_movies);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    ButterKnife.bind(this);
+
     setSupportActionBar(toolbar);
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     ActionBarDrawerToggle toggle =
         new ActionBarDrawerToggle(
             this,
-            drawer,
+            drawerLayout,
             toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close);
-    drawer.addDrawerListener(toggle);
+    drawerLayout.addDrawerListener(toggle);
     toggle.syncState();
-    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
-    progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-    recyclerView = (RecyclerView) findViewById(R.id.recyclerview_movies);
+
     GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());

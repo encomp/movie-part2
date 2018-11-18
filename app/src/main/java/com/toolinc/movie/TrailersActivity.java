@@ -19,6 +19,8 @@ import com.toolinc.movie.client.model.Video;
 import com.toolinc.movie.client.model.Videos;
 import com.toolinc.movie.widget.TrailerAdapter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,23 +32,28 @@ import retrofit2.Response;
 public final class TrailersActivity extends AppCompatActivity
     implements TrailerAdapter.OnVideoSelected, Callback<Videos> {
 
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+
+  @BindView(R.id.backdrop)
+  ImageView ivPoster;
+
+  @BindView(R.id.pb_loading_indicator)
+  ProgressBar progressBar;
+
+  @BindView(R.id.recyclerview_reviews)
+  RecyclerView recyclerView;
+
   private Movie movie;
-  private ImageView ivPoster;
-  private ProgressBar progressBar;
-  private RecyclerView recyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_trailers);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    ButterKnife.bind(this);
+
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-    ivPoster = (ImageView) findViewById(R.id.backdrop);
-    ivPoster = (ImageView) findViewById(R.id.backdrop);
-    progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-    recyclerView = (RecyclerView) findViewById(R.id.recyclerview_reviews);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setHasFixedSize(true);

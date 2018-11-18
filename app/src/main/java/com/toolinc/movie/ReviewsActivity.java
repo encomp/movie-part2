@@ -18,6 +18,8 @@ import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.client.model.Reviews;
 import com.toolinc.movie.widget.ReviewAdapter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,21 +30,27 @@ import retrofit2.Response;
  */
 public final class ReviewsActivity extends AppCompatActivity implements Callback<Reviews> {
 
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+
+  @BindView(R.id.backdrop)
+  ImageView ivPoster;
+
+  @BindView(R.id.pb_loading_indicator)
+  ProgressBar progressBar;
+
+  @BindView(R.id.recyclerview_reviews)
+  RecyclerView recyclerView;
+
   private Movie movie;
-  private ImageView ivPoster;
-  private ProgressBar progressBar;
-  private RecyclerView recyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reviews);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
+    ButterKnife.bind(this);
 
-    ivPoster = (ImageView) findViewById(R.id.backdrop);
-    progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-    recyclerView = (RecyclerView) findViewById(R.id.recyclerview_reviews);
+    setSupportActionBar(toolbar);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setHasFixedSize(true);
