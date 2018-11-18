@@ -15,7 +15,9 @@ import android.widget.ProgressBar;
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.model.Movie;
+import com.toolinc.movie.model.Video;
 import com.toolinc.movie.model.Videos;
+import com.toolinc.movie.widget.TrailerAdapter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,7 +27,8 @@ import retrofit2.Response;
  * Defines the behavior of the {@code R.layout.activity_trailers} to display all the trailers
  * available for a given movie.
  */
-public final class TrailersActivity extends AppCompatActivity implements Callback<Videos> {
+public final class TrailersActivity extends AppCompatActivity
+    implements TrailerAdapter.OnVideoSelected, Callback<Videos> {
 
   private Movie movie;
   private ImageView ivPoster;
@@ -67,9 +70,9 @@ public final class TrailersActivity extends AppCompatActivity implements Callbac
   @Override
   public void onResponse(Call<Videos> call, Response<Videos> response) {
     progressBar.setVisibility(View.INVISIBLE);
-    // Reviews reviews = response.body();
-    // ReviewAdapter reviewAdapter = new ReviewAdapter(reviews.reviews());
-    // recyclerView.setAdapter(reviewAdapter);
+    Videos videos = response.body();
+    TrailerAdapter trailerAdapter = new TrailerAdapter(videos.videos(), this);
+    recyclerView.setAdapter(trailerAdapter);
     recyclerView.setVisibility(View.VISIBLE);
   }
 
@@ -79,5 +82,12 @@ public final class TrailersActivity extends AppCompatActivity implements Callbac
     Snackbar.make(
             recyclerView, getString(R.string.loading_trailers_error_msg), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override
+  public void onSelected(Video video) {
+      Intent intent = new Intent(this, VideoActivity.class);
+      intent.putExtra(Intent.EXTRA_KEY_EVENT, video);
+      startActivity(intent);
   }
 }

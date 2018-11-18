@@ -28,10 +28,10 @@
     <string name="cd_poster_movie">Movie poster</string>
     <!-- Review Activity -->
     <string name="loading_reviews_msg" translatable="false">
-        Loading the reviews for this movie.
+        Loading the videos for this movie.
     </string>
     <string name="loading_reviews_error_msg" translatable="false">
-        Unable to retrieve the reviews for this movie ...
+        Unable to retrieve the videos for this movie ...
     </string>
     <string name="title_activity_review" translatable="false">Reviews</string>
     <string name="author_label" translatable="false">Author:</string>
@@ -58,6 +58,11 @@
     <string name="loading_trailers_error_msg" translatable="false">
         Unable to retrieve the trailers for this movie ...
     </string>
+    <string name="video_label" translatable="false">Name:</string>
+    <string name="video_type_label" translatable="false">Type:</string>
+    <string name="video_watch_label" translatable="false">Watch:</string>
+    <string name="sample_video_label" translatable="false">VENOM - Official Trailer (HD)</string>
+    <string name="sample_video_type_label" translatable="false">Trailer</string>
     <!-- Video Activity -->
     <string name="title_activity_video">Trailer</string>
 </resources>
