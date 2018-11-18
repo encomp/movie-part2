@@ -26,7 +26,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/** Defines the behavior of the movies_menu activity. */
+/**
+ * Defines the behavior of the {@code R.layout.activity_movies} that display the first page of the
+ * themoviedb api.
+ */
 public final class MoviesActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener,
         MovieAdapter.OnMovieSelected,

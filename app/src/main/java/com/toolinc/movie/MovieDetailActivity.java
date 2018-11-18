@@ -20,7 +20,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/** Displays the detail information of a specific {@link Movie}. */
+/**
+ * Defines the behavior of the {@code R.layout.activity_movie_detail} that displays the detail
+ * information of a specific {@link Movie}.
+ */
 public final class MovieDetailActivity extends AppCompatActivity {
 
   private Movie movie;
