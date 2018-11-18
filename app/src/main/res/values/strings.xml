@@ -14,8 +14,6 @@
     <string name="nav_header_subtitle" translatable="false">edgar.martinez.rico@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="title_activity_movie" translatable="false">Movies</string>
-    <!-- Favorites Activity -->
-    <string name="title_activity_favorites">Favorites</string>
     <!-- Movie Detail Activity -->
     <string name="loading_movies_msg" translatable="false">Loading the selected movies.</string>
     <string name="loading_movies_error_msg" translatable="false">

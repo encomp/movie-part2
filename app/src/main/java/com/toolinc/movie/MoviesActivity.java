@@ -95,8 +95,8 @@ public final class MoviesActivity extends AppCompatActivity
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
     setContentView(R.layout.activity_movies);
     ButterKnife.bind(this);
 
@@ -111,15 +111,20 @@ public final class MoviesActivity extends AppCompatActivity
     drawerLayout.addDrawerListener(toggle);
     toggle.syncState();
     navigationView.setNavigationItemSelectedListener(this);
-    allMoviesViewModel = ViewModelProviders.of(this).get(AllMoviesViewModel.class);
-    allMoviesViewModel.getAllMovies().observe(this, this::onChanged);
 
     GridLayoutManager layoutManager =
         new GridLayoutManager(this, calculateNoOfColumns(getApplicationContext()));
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setHasFixedSize(true);
-    fetchMovies(MovieClient.create().popular());
+
+    if (isMovieStateAvailable(bundle)) {
+      setFromState(bundle);
+    } else {
+      fetchMovies(MovieClient.create().popular());
+    }
+    allMoviesViewModel = ViewModelProviders.of(this).get(AllMoviesViewModel.class);
+    allMoviesViewModel.getAllMovies().observe(this, this::onChanged);
   }
 
   @Override
@@ -136,6 +141,8 @@ public final class MoviesActivity extends AppCompatActivity
     MoviesState moviesState =
         MoviesState.builder()
             .setMovieModels(moviesAdapter.getMovies())
+            .setMovieModelsDb(movieModelsDb)
+            .setMovieModelsRest(movieModelsRest)
             .setPopular(popularLabel, currentMoviesMenu)
             .setFavorites(favorites)
             .build();
@@ -145,20 +152,7 @@ public final class MoviesActivity extends AppCompatActivity
   @Override
   protected void onRestoreInstanceState(Bundle bundle) {
     super.onRestoreInstanceState(bundle);
-    Optional<MoviesState> moviesStateOptional =
-        Optional.fromNullable((MoviesState) bundle.getSerializable(MoviesState.MOVIES_STATE));
-    if (moviesStateOptional.isPresent()) {
-      MoviesState moviesState = moviesStateOptional.get();
-      favorites = moviesState.favorites();
-      if (moviesState.popular()) {
-        currentMoviesMenu = topMoviesLabel;
-      } else {
-        currentMoviesMenu = popularLabel;
-      }
-      moviesAdapter.setMovies(moviesState.movieModels());
-      recyclerView.setAdapter(moviesAdapter);
-      recyclerView.setVisibility(View.VISIBLE);
-    }
+    setFromState(bundle);
   }
 
   @Override
@@ -222,17 +216,6 @@ public final class MoviesActivity extends AppCompatActivity
     startActivity(intent);
   }
 
-  private void fetchMovies(Call<Movies> call) {
-    if (Optional.fromNullable(moviesCall).isPresent()) {
-      moviesCall.cancel();
-    }
-    moviesCall = call;
-    Snackbar.make(recyclerView, getString(R.string.loading_movies_msg), Snackbar.LENGTH_SHORT)
-        .show();
-    progressBar.setVisibility(View.VISIBLE);
-    moviesCall.enqueue(this);
-  }
-
   @Override
   public void onResponse(Call<Movies> call, Response<Movies> response) {
     progressBar.setVisibility(View.INVISIBLE);
@@ -261,6 +244,32 @@ public final class MoviesActivity extends AppCompatActivity
     }
   }
 
+  private void setFromState(Bundle bundle) {
+    if (isMovieStateAvailable(bundle)) {
+      MoviesState moviesState = (MoviesState) bundle.getSerializable(MoviesState.MOVIES_STATE);
+      favorites = moviesState.favorites();
+      if (moviesState.popular()) {
+        currentMoviesMenu = topMoviesLabel;
+      } else {
+        currentMoviesMenu = popularLabel;
+      }
+      movieModelsDb = moviesState.movieModelsDb();
+      movieModelsRest = moviesState.movieModelsRest();
+      refreshRecycleView(moviesState.movieModels());
+    }
+  }
+
+  private void fetchMovies(Call<Movies> call) {
+    if (Optional.fromNullable(moviesCall).isPresent()) {
+      moviesCall.cancel();
+    }
+    moviesCall = call;
+    Snackbar.make(recyclerView, getString(R.string.loading_movies_msg), Snackbar.LENGTH_SHORT)
+        .show();
+    progressBar.setVisibility(View.VISIBLE);
+    moviesCall.enqueue(this);
+  }
+
   private void refreshRecycleView(@Nullable ImmutableList<MovieModel> movieModels) {
     ImmutableList<MovieModel> tmpMovieModels = null;
     if (Optional.fromNullable(movieModels).isPresent()) {
@@ -273,16 +282,26 @@ public final class MoviesActivity extends AppCompatActivity
     recyclerView.setVisibility(View.VISIBLE);
   }
 
+  private static final boolean isMovieStateAvailable(Bundle bundle) {
+    return Optional.fromNullable(bundle).isPresent()
+        && Optional.fromNullable((MoviesState) bundle.getSerializable(MoviesState.MOVIES_STATE))
+            .isPresent();
+  }
+
   /** Defines the state that needs to be kept for saving and restoring the state. */
   @AutoValue
   abstract static class MoviesState implements Serializable {
     private static final String MOVIES_STATE = "MOVIES_ACTIVITY_STATE";
 
-    public abstract ImmutableList<MovieModel> movieModels();
+    abstract ImmutableList<MovieModel> movieModels();
 
-    public abstract boolean popular();
+    abstract ImmutableList<MovieModel> movieModelsDb();
 
-    public abstract boolean favorites();
+    abstract ImmutableList<MovieModel> movieModelsRest();
+
+    abstract boolean popular();
+
+    abstract boolean favorites();
 
     static final Builder builder() {
       return new AutoValue_MoviesActivity_MoviesState.Builder();
@@ -294,6 +313,10 @@ public final class MoviesActivity extends AppCompatActivity
       abstract boolean popular();
 
       abstract Builder setMovieModels(ImmutableList<MovieModel> movieModels);
+
+      abstract Builder setMovieModelsDb(ImmutableList<MovieModel> movieModelsDb);
+
+      abstract Builder setMovieModelsRest(ImmutableList<MovieModel> movieModelsRest);
 
       abstract Builder setPopular(boolean popular);
 

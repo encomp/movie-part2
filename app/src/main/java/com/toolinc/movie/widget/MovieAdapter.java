@@ -21,25 +21,12 @@ import com.toolinc.movie.model.MovieModel;
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHolder> {
 
-  private final Optional<OnMovieSelected> onMovieSelected;
+  private final OnMovieSelected onMovieSelected;
   private ImmutableList<MovieModel> movies = ImmutableList.copyOf(Lists.newArrayList());
 
-  public MovieAdapter() {
-    onMovieSelected = Optional.absent();
-  }
-
-  public MovieAdapter(ImmutableList<MovieModel> movies) {
-    this.setMovies(movies);
-    onMovieSelected = Optional.absent();
-  }
-
   public MovieAdapter(OnMovieSelected onMovieSelected) {
-    this.onMovieSelected = validateOnMovieSelected(onMovieSelected);
-  }
-
-  public MovieAdapter(ImmutableList<MovieModel> movies, OnMovieSelected onMovieSelected) {
-    this(onMovieSelected);
-    this.setMovies(movies);
+    this.onMovieSelected =
+        Preconditions.checkNotNull(onMovieSelected, "Missing the selection movie listener.");
   }
 
   @NonNull
@@ -62,12 +49,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
   @Override
   public int getItemCount() {
     return movies.size();
-  }
-
-  @NonNull
-  private Optional<OnMovieSelected> validateOnMovieSelected(OnMovieSelected onMovieSelected) {
-    return Optional.of(
-        Preconditions.checkNotNull(onMovieSelected, "Missing the selection movie listener."));
   }
 
   public void setMovies(ImmutableList<MovieModel> movies) {
@@ -99,16 +80,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
       super(movieBinding.getRoot());
       this.movieBinding =
           Preconditions.checkNotNull(movieBinding, "MoviesListItemMovieBinding is missing.");
-      if (onMovieSelected.isPresent()) {
-        movieBinding.ivMoviePoster.setOnClickListener(this);
-      }
+      movieBinding.ivMoviePoster.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-      if (onMovieSelected.isPresent()) {
-        onMovieSelected.get().onSelected(movies.get(getAdapterPosition()));
-      }
+      onMovieSelected.onSelected(movies.get(getAdapterPosition()));
     }
   }
 }
