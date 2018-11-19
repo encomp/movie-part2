@@ -188,6 +188,10 @@ public final class MoviesActivity extends AppCompatActivity
         refreshMenuItemLabel();
         fetchMovies(call);
         return true;
+
+      case R.id.mi_delete_all:
+        allMoviesViewModel.deleteAll();
+        return true;
     }
     return super.onOptionsItemSelected(item);
   }

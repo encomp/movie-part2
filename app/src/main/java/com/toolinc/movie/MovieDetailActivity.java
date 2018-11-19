@@ -44,6 +44,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
 
   @BindView(R.id.fab_review)
   FloatingActionButton fabReview;
+
   private final Callback<Reviews> reviewsCallback =
       new Callback<Reviews>() {
 
@@ -64,8 +65,10 @@ public final class MovieDetailActivity extends AppCompatActivity {
               .show();
         }
       };
+
   @BindView(R.id.fab_trailer)
   FloatingActionButton fabTrailer;
+
   private final Callback<Videos> videosCallback =
       new Callback<Videos>() {
 
@@ -86,16 +89,22 @@ public final class MovieDetailActivity extends AppCompatActivity {
               .show();
         }
       };
+
   @BindView(R.id.iv_movie_poster)
   ImageView ivPoster;
+
   @BindView(R.id.tv_movie_title)
   TextView tvMovieTitle;
+
   @BindView(R.id.tv_movie_overview)
   TextView tvMovieOverview;
+
   @BindView(R.id.tv_vote_average)
   RatingBar tvVoteAverage;
+
   @BindView(R.id.tv_release_date)
   TextView tvReleaseDate;
+
   private MovieModel movieModel;
   private MovieRepository movieRepository;
   private Call<Reviews> reviewsCall;
@@ -115,8 +124,6 @@ public final class MovieDetailActivity extends AppCompatActivity {
           Optional.fromNullable(
               (MovieModel) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT));
       initMovie(optional);
-    } else {
-      loadFromBundle(Optional.fromNullable(bundle));
     }
     initListeners();
   }

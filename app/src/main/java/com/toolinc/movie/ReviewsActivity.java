@@ -15,8 +15,8 @@ import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.client.model.Reviews;
+import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.widget.ReviewAdapter;
 
 import butterknife.BindView;
@@ -43,7 +43,7 @@ public final class ReviewsActivity extends AppCompatActivity implements Callback
   @BindView(R.id.recyclerview_reviews)
   RecyclerView recyclerView;
 
-  private Movie movie;
+  private MovieModel movie;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public final class ReviewsActivity extends AppCompatActivity implements Callback
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
-      movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
+      movie = (MovieModel) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
       Picasso.get()
           .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
           .into(ivPoster);

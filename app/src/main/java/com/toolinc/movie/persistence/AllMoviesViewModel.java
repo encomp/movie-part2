@@ -22,11 +22,15 @@ public final class AllMoviesViewModel extends AndroidViewModel {
     return movieRepository.getAllMovies();
   }
 
-  public void insert(MovieEntity word) {
-    movieRepository.insert(word);
+  public void insert(MovieEntity movieEntity) {
+    movieRepository.insert(movieEntity);
   }
 
-  public void delete(MovieEntity word) {
-    movieRepository.delete(word);
+  public void delete(MovieEntity movieEntity) {
+    movieRepository.delete(movieEntity);
+  }
+
+  public void deleteAll() {
+    movieRepository.deleteAll();
   }
 }

@@ -15,9 +15,9 @@ import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 import com.toolinc.movie.client.MovieClient;
-import com.toolinc.movie.client.model.Movie;
 import com.toolinc.movie.client.model.Video;
 import com.toolinc.movie.client.model.Videos;
+import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.widget.TrailerAdapter;
 
 import butterknife.BindView;
@@ -45,7 +45,7 @@ public final class TrailersActivity extends AppCompatActivity
   @BindView(R.id.recyclerview_reviews)
   RecyclerView recyclerView;
 
-  private Movie movie;
+  private MovieModel movie;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public final class TrailersActivity extends AppCompatActivity
     recyclerView.setHasFixedSize(true);
 
     if (getIntent().hasExtra(Intent.EXTRA_KEY_EVENT)) {
-      movie = (Movie) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
+      movie = (MovieModel) getIntent().getSerializableExtra(Intent.EXTRA_KEY_EVENT);
       Picasso.get()
           .load(String.format(BuildConfig.IMAGE_BASE_URL, movie.posterPath()))
           .into(ivPoster);
