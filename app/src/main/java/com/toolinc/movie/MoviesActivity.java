@@ -82,9 +82,8 @@ public final class MoviesActivity extends AppCompatActivity
   private boolean popular;
   private boolean favorites;
   private AllMoviesViewModel allMoviesViewModel;
-
-  private final MovieAdapter moviesAdapter = new MovieAdapter(this);
   private Call<Movies> moviesCall;
+  private final MovieAdapter moviesAdapter = new MovieAdapter(this);
 
   private static int calculateNoOfColumns(Context context) {
     DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
