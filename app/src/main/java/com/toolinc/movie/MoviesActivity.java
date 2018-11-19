@@ -75,10 +75,11 @@ public final class MoviesActivity extends AppCompatActivity
   @BindString(R.string.top_movies)
   String topMoviesLabel;
 
+  private MenuItem movie;
+  MenuItem delete;
   private ImmutableList<MovieModel> movieModelsDb;
   private ImmutableList<MovieModel> movieModelsRest;
-
-  private String currentMoviesMenu;
+  private boolean popular;
   private boolean favorites;
   private AllMoviesViewModel allMoviesViewModel;
 
@@ -118,10 +119,8 @@ public final class MoviesActivity extends AppCompatActivity
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setHasFixedSize(true);
 
-    if (isMovieStateAvailable(bundle)) {
-      setFromState(bundle);
-    } else {
-      fetchMovies(MovieClient.create().popular());
+    if (!isMovieStateAvailable(bundle)) {
+      fetchMovies(MovieClient.create().topRated());
     }
     allMoviesViewModel = ViewModelProviders.of(this).get(AllMoviesViewModel.class);
     allMoviesViewModel.getAllMovies().observe(this, this::onChanged);
@@ -143,7 +142,7 @@ public final class MoviesActivity extends AppCompatActivity
             .setMovieModels(moviesAdapter.getMovies())
             .setMovieModelsDb(movieModelsDb)
             .setMovieModelsRest(movieModelsRest)
-            .setPopular(popularLabel, currentMoviesMenu)
+            .setPopular(popular)
             .setFavorites(favorites)
             .build();
     bundle.putSerializable(MoviesState.MOVIES_STATE, moviesState);
@@ -168,23 +167,25 @@ public final class MoviesActivity extends AppCompatActivity
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.movies_menu, menu);
+    movie = menu.findItem(R.id.mi_movie);
+    delete = menu.findItem(R.id.mi_delete_all);
+    refreshMenuItems();
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    String currentMoviesMenu = null;
     switch (item.getItemId()) {
       case R.id.mi_movie:
-        String title = item.getTitle().toString();
+        popular = popularLabel.equals(item.getTitle().toString());
         Call<Movies> call = null;
-        if (title.equals(popularLabel)) {
+        if (popular) {
           call = MovieClient.create().popular();
-          currentMoviesMenu = topMoviesLabel;
         } else {
           call = MovieClient.create().topRated();
-          currentMoviesMenu = popularLabel;
         }
-        item.setTitle(currentMoviesMenu);
+        refreshMenuItemLabel();
         fetchMovies(call);
         return true;
     }
@@ -204,6 +205,7 @@ public final class MoviesActivity extends AppCompatActivity
         refreshRecycleView(movieModelsDb);
         break;
     }
+    refreshMenuItems();
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
@@ -248,11 +250,7 @@ public final class MoviesActivity extends AppCompatActivity
     if (isMovieStateAvailable(bundle)) {
       MoviesState moviesState = (MoviesState) bundle.getSerializable(MoviesState.MOVIES_STATE);
       favorites = moviesState.favorites();
-      if (moviesState.popular()) {
-        currentMoviesMenu = topMoviesLabel;
-      } else {
-        currentMoviesMenu = popularLabel;
-      }
+      popular = moviesState.popular();
       movieModelsDb = moviesState.movieModelsDb();
       movieModelsRest = moviesState.movieModelsRest();
       refreshRecycleView(moviesState.movieModels());
@@ -280,6 +278,27 @@ public final class MoviesActivity extends AppCompatActivity
     moviesAdapter.setMovies(tmpMovieModels);
     recyclerView.setAdapter(moviesAdapter);
     recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private void refreshMenuItems() {
+    refreshMenuItemLabel();
+    if (favorites) {
+      delete.setVisible(true);
+      movie.setVisible(false);
+    } else {
+      delete.setVisible(false);
+      movie.setVisible(true);
+    }
+  }
+
+  private void refreshMenuItemLabel() {
+    String currentMoviesMenu = null;
+    if (popular) {
+      currentMoviesMenu = topMoviesLabel;
+    } else {
+      currentMoviesMenu = popularLabel;
+    }
+    movie.setTitle(currentMoviesMenu);
   }
 
   private static final boolean isMovieStateAvailable(Bundle bundle) {
@@ -321,11 +340,6 @@ public final class MoviesActivity extends AppCompatActivity
       abstract Builder setPopular(boolean popular);
 
       abstract Builder setFavorites(boolean favorites);
-
-      Builder setPopular(String popularMoviesLabel, String currentMoviesMenu) {
-        setPopular(popularMoviesLabel.equals(currentMoviesMenu));
-        return this;
-      }
 
       abstract MoviesState build();
     }
