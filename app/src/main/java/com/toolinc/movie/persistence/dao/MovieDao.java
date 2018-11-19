@@ -9,11 +9,12 @@ import android.arch.persistence.room.Query;
 
 import com.toolinc.movie.persistence.model.MovieEntity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /** Specifies the data access object behavior for the {@link MovieEntity}. */
 @Dao
-public interface MovieDao {
+public interface MovieDao extends Serializable {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(MovieEntity movieEntity);
 
@@ -28,4 +29,9 @@ public interface MovieDao {
 
   @Query("SELECT * from movieTable ORDER BY movieId ASC")
   LiveData<List<MovieEntity>> getAll();
+
+  public enum Operation implements Serializable {
+    Insert,
+    Delete
+  }
 }

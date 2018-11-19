@@ -22,6 +22,7 @@ import com.toolinc.movie.client.model.Reviews;
 import com.toolinc.movie.client.model.Videos;
 import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.persistence.MovieRepository;
+import com.toolinc.movie.persistence.dao.MovieDao;
 import com.toolinc.movie.persistence.model.MovieEntity;
 
 import butterknife.BindView;
@@ -35,6 +36,8 @@ import retrofit2.Response;
  * information of a specific {@link Movie}.
  */
 public final class MovieDetailActivity extends AppCompatActivity {
+
+  private static final String STATE = "MOVIES_DETAIL_ACTIVITY_STATE";
 
   @BindView(R.id.fab_add)
   FloatingActionButton fabAdd;
@@ -142,7 +145,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
   @Override
   protected void onSaveInstanceState(Bundle bundle) {
     super.onSaveInstanceState(bundle);
-    bundle.putSerializable(BuildConfig.MOVIE_STATE, movieModel);
+    bundle.putSerializable(STATE, movieModel);
   }
 
   @Override
@@ -170,7 +173,10 @@ public final class MovieDetailActivity extends AppCompatActivity {
             String msg =
                 String.format(getString(R.string.insert_movie_msg), movieModel.originalTitle());
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            movieRepository.insert(new MovieEntity(movieModel));
+            Intent responseIntent = new Intent();
+            responseIntent.putExtra(BuildConfig.MOVIE_ENTITY, new MovieEntity(movieModel));
+            responseIntent.putExtra(BuildConfig.MOVIE_DAO_OPERATION, MovieDao.Operation.Insert);
+            setResult(RESULT_OK, responseIntent);
             MovieDetailActivity.this.finish();
           }
         });
@@ -181,7 +187,11 @@ public final class MovieDetailActivity extends AppCompatActivity {
             String msg =
                 String.format(getString(R.string.delete_movie_msg), movieModel.originalTitle());
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            movieRepository.delete(new MovieEntity(movieModel));
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            Intent responseIntent = new Intent();
+            responseIntent.putExtra(BuildConfig.MOVIE_ENTITY, new MovieEntity(movieModel));
+            responseIntent.putExtra(BuildConfig.MOVIE_DAO_OPERATION, MovieDao.Operation.Delete);
+            setResult(RESULT_OK, responseIntent);
             MovieDetailActivity.this.finish();
           }
         });
@@ -209,7 +219,7 @@ public final class MovieDetailActivity extends AppCompatActivity {
     if (bundleOptional.isPresent()) {
       Bundle bundle = bundleOptional.get();
       Optional<MovieModel> optional =
-          Optional.fromNullable((MovieModel) bundle.getSerializable(BuildConfig.MOVIE_STATE));
+          Optional.fromNullable((MovieModel) bundle.getSerializable(STATE));
       initMovie(optional);
     }
   }

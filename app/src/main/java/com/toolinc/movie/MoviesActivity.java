@@ -30,6 +30,7 @@ import com.toolinc.movie.client.MovieClient;
 import com.toolinc.movie.client.model.Movies;
 import com.toolinc.movie.model.MovieModel;
 import com.toolinc.movie.persistence.AllMoviesViewModel;
+import com.toolinc.movie.persistence.dao.MovieDao.Operation;
 import com.toolinc.movie.persistence.model.MovieEntity;
 import com.toolinc.movie.widget.MovieAdapter;
 
@@ -53,6 +54,7 @@ public final class MoviesActivity extends AppCompatActivity
         Callback<Movies>,
         Observer<List<MovieEntity>> {
   private static final ImmutableList<MovieModel> EMPTY = ImmutableList.copyOf(Lists.newArrayList());
+  public static final int DATABASE_CHANGE = 1;
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
@@ -144,13 +146,34 @@ public final class MoviesActivity extends AppCompatActivity
             .setPopular(popular)
             .setFavorites(favorites)
             .build();
-    bundle.putSerializable(MoviesState.MOVIES_STATE, moviesState);
+    bundle.putSerializable(MoviesState.STATE, moviesState);
   }
 
   @Override
   protected void onRestoreInstanceState(Bundle bundle) {
     super.onRestoreInstanceState(bundle);
     setFromState(bundle);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
+    super.onActivityResult(requestCode, resultCode, intent);
+    if (requestCode == DATABASE_CHANGE && resultCode == RESULT_OK) {
+      MovieEntity movieEntity = (MovieEntity) intent.getSerializableExtra(BuildConfig.MOVIE_ENTITY);
+      Operation operation =
+          (Operation) intent.getSerializableExtra(BuildConfig.MOVIE_DAO_OPERATION);
+      favorites = true;
+      refreshMenuItems();
+      switch (operation) {
+        case Delete:
+          allMoviesViewModel.delete(movieEntity);
+          break;
+
+        case Insert:
+          allMoviesViewModel.insert(movieEntity);
+          break;
+      }
+    }
   }
 
   @Override
@@ -218,7 +241,7 @@ public final class MoviesActivity extends AppCompatActivity
   public void onSelected(MovieModel movie) {
     Intent intent = new Intent(this, MovieDetailActivity.class);
     intent.putExtra(Intent.EXTRA_KEY_EVENT, movie);
-    startActivity(intent);
+    startActivityForResult(intent, DATABASE_CHANGE);
   }
 
   @Override
@@ -251,7 +274,7 @@ public final class MoviesActivity extends AppCompatActivity
 
   private void setFromState(Bundle bundle) {
     if (isMovieStateAvailable(bundle)) {
-      MoviesState moviesState = (MoviesState) bundle.getSerializable(MoviesState.MOVIES_STATE);
+      MoviesState moviesState = (MoviesState) bundle.getSerializable(MoviesState.STATE);
       favorites = moviesState.favorites();
       popular = moviesState.popular();
       movieModelsDb = moviesState.movieModelsDb();
@@ -306,14 +329,14 @@ public final class MoviesActivity extends AppCompatActivity
 
   private static final boolean isMovieStateAvailable(Bundle bundle) {
     return Optional.fromNullable(bundle).isPresent()
-        && Optional.fromNullable((MoviesState) bundle.getSerializable(MoviesState.MOVIES_STATE))
+        && Optional.fromNullable((MoviesState) bundle.getSerializable(MoviesState.STATE))
             .isPresent();
   }
 
   /** Defines the state that needs to be kept for saving and restoring the state. */
   @AutoValue
   abstract static class MoviesState implements Serializable {
-    private static final String MOVIES_STATE = "MOVIES_ACTIVITY_STATE";
+    private static final String STATE = "MOVIES_ACTIVITY_STATE";
 
     abstract ImmutableList<MovieModel> movieModels();
 
